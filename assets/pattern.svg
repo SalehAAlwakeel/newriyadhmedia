@@ -1,0 +1,19 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="120" height="120" viewBox="0 0 120 120">
+  <!-- Eight-pointed star (Islamic geometric pattern) tile -->
+  <g fill="none" stroke="currentColor" stroke-width="0.8">
+    <!-- Outer octagon -->
+    <polygon points="60,8 82,22 96,44 96,76 82,98 60,112 38,98 24,76 24,44 38,22"/>
+    <!-- Inner star -->
+    <polygon points="60,22 68,44 92,44 74,58 80,82 60,68 40,82 46,58 28,44 52,44"/>
+    <!-- Corner connectors -->
+    <line x1="0" y1="0" x2="24" y2="24"/>
+    <line x1="120" y1="0" x2="96" y2="24"/>
+    <line x1="0" y1="120" x2="24" y2="96"/>
+    <line x1="120" y1="120" x2="96" y2="96"/>
+    <!-- Edge midpoint diamonds -->
+    <polygon points="60,0 68,12 60,24 52,12"/>
+    <polygon points="0,60 12,52 24,60 12,68"/>
+    <polygon points="120,60 108,52 96,60 108,68"/>
+    <polygon points="60,120 68,108 60,96 52,108"/>
+  </g>
+</svg>

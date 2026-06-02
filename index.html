@@ -1,0 +1,605 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover" />
+  <meta name="theme-color" content="#f2ebd9" />
+  <title>New Riyadh Media · Marketing Agency</title>
+  <meta name="description" content="New Riyadh Media is a creative marketing agency crafting elegant brands, campaigns and digital experiences from Riyadh to the world." />
+
+  <link rel="icon" type="image/png" href="assets/logo-mark.png" />
+  <link rel="apple-touch-icon" href="assets/logo-mark.png" />
+
+  <!-- Fonts: elegant serif + clean sans + a tasteful italic -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;0,700;1,300;1,400;1,500&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet" />
+
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+
+  <!-- ============ LOADER ============ -->
+  <div class="loader" aria-hidden="true">
+    <div class="loader__inner">
+      <div class="loader__mark">
+        <span class="loader__letter">N</span>
+        <span class="loader__letter">R</span>
+        <span class="loader__letter">M</span>
+      </div>
+      <div class="loader__bar"><span></span></div>
+      <div class="loader__count">
+        <span class="loader__num">0</span><span>%</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- ============ CUSTOM CURSOR ============ -->
+  <div class="cursor" aria-hidden="true">
+    <div class="cursor__dot"></div>
+    <div class="cursor__ring"></div>
+  </div>
+
+  <!-- ============ NAV ============ -->
+  <header class="nav" data-nav>
+    <a class="nav__brand" href="#top" aria-label="New Riyadh Media, Home">
+      <img class="nav__logo-img" src="assets/logo-mark.png" alt="New Riyadh Media"/>
+      <span class="nav__name">New Riyadh Media</span>
+    </a>
+
+    <nav class="nav__links" aria-label="Primary">
+      <a href="#about" data-hover>About</a>
+      <a href="#services" data-hover>Services</a>
+      <a href="automated-marketing.html" data-hover>Automated Marketing</a>
+      <a href="#contact" data-hover>Contact</a>
+    </nav>
+
+    <a href="#contact" class="nav__cta" data-hover>
+      <span>Start a project</span>
+      <svg viewBox="0 0 24 24" fill="none" aria-hidden="true">
+        <path d="M5 12h14M13 6l6 6-6 6" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+      </svg>
+    </a>
+  </header>
+
+  <main id="top">
+
+    <!-- ============ HERO ============ -->
+    <section class="hero">
+      <video class="hero__video" autoplay muted loop playsinline preload="metadata" poster="assets/logo-mark.png" aria-hidden="true">
+        <source src="assets/hero.mp4" type="video/mp4"/>
+        <source src="assets/hero.webm" type="video/webm"/>
+      </video>
+      <div class="hero__wash" aria-hidden="true"></div>
+
+      <!-- Editorial frame — corner brackets that turn the contained video into a curated gallery piece -->
+      <div class="hero__caption" aria-hidden="true">
+        <span>Vol. I — Riyadh MMXXVI</span>
+        <span>Reel · 01</span>
+      </div>
+      <div class="hero__frame" aria-hidden="true">
+        <span></span><span></span>
+      </div>
+
+      <div class="hero__sub">
+        <p class="reveal-fade">A modern marketing studio from Riyadh, pairing senior strategists with AI-led production — full-team output.</p>
+        <a href="#services" class="btn-ghost" data-hover>
+          <span>Our services</span>
+          <svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M12 5v14M6 13l6 6 6-6" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </a>
+      </div>
+
+      <div class="hero__corners" aria-hidden="true">
+        <span>NRM · 2026</span>
+        <span>SCROLL</span>
+      </div>
+    </section>
+
+    <!-- ============ MARQUEE ============ -->
+    <section class="marquee" aria-hidden="true">
+      <div class="marquee__track">
+        <span>Branding</span><span aria-hidden="true">✦</span>
+        <span>Strategy</span><span aria-hidden="true">✦</span>
+        <span>Events</span><span aria-hidden="true">✦</span>
+        <span>Digital Marketing</span><span aria-hidden="true">✦</span>
+        <span>Photography</span><span aria-hidden="true">✦</span>
+        <span>Videography</span><span aria-hidden="true">✦</span>
+        <span>Campaigns</span><span aria-hidden="true">✦</span>
+        <span>Content</span><span aria-hidden="true">✦</span>
+        <span>Branding</span><span aria-hidden="true">✦</span>
+        <span>Strategy</span><span aria-hidden="true">✦</span>
+        <span>Events</span><span aria-hidden="true">✦</span>
+        <span>Digital Marketing</span><span aria-hidden="true">✦</span>
+        <span>Photography</span><span aria-hidden="true">✦</span>
+        <span>Videography</span><span aria-hidden="true">✦</span>
+        <span>Campaigns</span><span aria-hidden="true">✦</span>
+        <span>Content</span><span aria-hidden="true">✦</span>
+      </div>
+    </section>
+
+    <!-- ============ MADE IN SAUDI ============ -->
+    <section class="origin" aria-labelledby="origin-title">
+      <div class="origin__inner">
+        <span class="eyebrow reveal-fade">[ Made in the Kingdom ]</span>
+        <h2 id="origin-title" class="origin__title">
+          <span class="line"><span class="word reveal">Proudly</span> <em class="word reveal">Saudi-made,</em></span>
+          <span class="line"><span class="word reveal">100%</span> <span class="word reveal">Saudi</span> <span class="word reveal">team.</span></span>
+        </h2>
+        <p class="origin__text reveal-fade">
+          Every strategist, designer, photographer and producer behind New Riyadh Media is Saudi. Born here, trained here, telling our stories to the world.
+        </p>
+      </div>
+    </section>
+
+    <!-- ============ ABOUT ============ -->
+    <section class="about-beliefs" id="about">
+      <div class="section-head">
+        <span class="eyebrow reveal-fade">[ 01 / What we believe ]</span>
+        <h2 class="section-title">
+          <span class="line"><span class="word reveal">Four</span> <span class="word reveal">principles.</span></span>
+          <span class="line"><em class="word reveal">Every</em> <span class="word reveal">project.</span></span>
+        </h2>
+      </div>
+
+      <ul class="about-belief-list">
+        <li class="about-belief reveal-up">
+          <span class="about-belief__num">01</span>
+          <h3>Saudi-made, world-aware.</h3>
+          <p>Born here, trained here, working here. We understand the cultural codes Saudi audiences listen for — and we know how to make work that resonates beyond the Kingdom.</p>
+        </li>
+        <li class="about-belief reveal-up">
+          <span class="about-belief__num">02</span>
+          <h3>Strategy before pixels.</h3>
+          <p>A brand is a thousand decisions made the same way. We do the thinking first, so every piece of work that follows has somewhere clear to land.</p>
+        </li>
+        <li class="about-belief reveal-up">
+          <span class="about-belief__num">03</span>
+          <h3>AI accelerates. Humans decide.</h3>
+          <p>We use AI to ship more, faster. We use senior taste to make sure what ships is actually good. Tools don't replace judgement — they just give it more reach.</p>
+        </li>
+        <li class="about-belief reveal-up">
+          <span class="about-belief__num">04</span>
+          <h3>One team. End to end.</h3>
+          <p>Strategy, design, copy, photography, film and events live in the same room. The vision stays intact from the first sketch to the final file delivered to media.</p>
+        </li>
+      </ul>
+
+      <ul class="about-stat-list" style="margin-top: 64px;">
+        <li class="about-stat reveal-up">
+          <span class="about-stat__num">100<sub>%</sub></span>
+          <span class="about-stat__label">Saudi-owned &amp; led</span>
+        </li>
+        <li class="about-stat reveal-up">
+          <span class="about-stat__num">06</span>
+          <span class="about-stat__label">In-house disciplines</span>
+        </li>
+        <li class="about-stat reveal-up">
+          <span class="about-stat__num">14<sub>days</sub></span>
+          <span class="about-stat__label">From brief to live</span>
+        </li>
+        <li class="about-stat reveal-up">
+          <span class="about-stat__num">2030</span>
+          <span class="about-stat__label">The market we're built for</span>
+        </li>
+      </ul>
+
+      <div class="about-cta__actions reveal-fade" style="margin-top: 64px; display: flex; gap: 16px; flex-wrap: wrap;">
+        <a href="about.html" class="btn-ghost" data-hover>
+          <span>Read the full story</span>
+          <svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </a>
+      </div>
+    </section>
+
+    <!-- ============ SERVICES ============ -->
+    <section class="services" id="services">
+      <div class="section-head">
+        <span class="eyebrow reveal-fade">[ 02 / Services ]</span>
+        <h2 class="section-title">
+          <span class="line"><span class="word reveal">What</span> <span class="word reveal">we</span> <em class="word reveal">do</em><span class="word reveal">.</span></span>
+        </h2>
+      </div>
+
+      <ul class="services__list">
+        <li class="service" data-hover data-service="branding" role="button" tabindex="0" aria-haspopup="dialog">
+          <span class="service__num">01</span>
+          <h3 class="service__title">Branding</h3>
+          <p class="service__desc">Naming, marks, visual systems and verbal identity, built to last beyond the trend cycle.</p>
+          <span class="service__arrow" aria-hidden="true">
+            <svg viewBox="0 0 24 24" fill="none"><path d="M7 17 17 7M9 7h8v8" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          </span>
+        </li>
+        <li class="service" data-hover data-service="strategy" role="button" tabindex="0" aria-haspopup="dialog">
+          <span class="service__num">02</span>
+          <h3 class="service__title">Strategy &amp; Positioning</h3>
+          <p class="service__desc">Research, audience truths and brand strategy that give every creative decision a reason.</p>
+          <span class="service__arrow" aria-hidden="true">
+            <svg viewBox="0 0 24 24" fill="none"><path d="M7 17 17 7M9 7h8v8" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          </span>
+        </li>
+        <li class="service" data-hover data-service="digital" role="button" tabindex="0" aria-haspopup="dialog">
+          <span class="service__num">03</span>
+          <h3 class="service__title">Digital Marketing</h3>
+          <p class="service__desc">Performance, social and SEO programmes engineered to grow audiences and convert with intent.</p>
+          <span class="service__arrow" aria-hidden="true">
+            <svg viewBox="0 0 24 24" fill="none"><path d="M7 17 17 7M9 7h8v8" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          </span>
+        </li>
+        <li class="service" data-hover data-service="campaigns" role="button" tabindex="0" aria-haspopup="dialog">
+          <span class="service__num">04</span>
+          <h3 class="service__title">Campaigns &amp; Content</h3>
+          <p class="service__desc">Concept-led campaigns, art direction and editorial content built for every channel and screen.</p>
+          <span class="service__arrow" aria-hidden="true">
+            <svg viewBox="0 0 24 24" fill="none"><path d="M7 17 17 7M9 7h8v8" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          </span>
+        </li>
+        <li class="service" data-hover data-service="production" role="button" tabindex="0" aria-haspopup="dialog">
+          <span class="service__num">05</span>
+          <h3 class="service__title">Photography &amp; Videography</h3>
+          <p class="service__desc">In-house production from stills to film. Concept, direction, capture and post in one studio.</p>
+          <span class="service__arrow" aria-hidden="true">
+            <svg viewBox="0 0 24 24" fill="none"><path d="M7 17 17 7M9 7h8v8" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          </span>
+        </li>
+        <li class="service" data-hover data-service="events" role="button" tabindex="0" aria-haspopup="dialog">
+          <span class="service__num">06</span>
+          <h3 class="service__title">Event Planning</h3>
+          <p class="service__desc">Launches, activations and curated experiences, from concept and creative to flawless on-the-day delivery.</p>
+          <span class="service__arrow" aria-hidden="true">
+            <svg viewBox="0 0 24 24" fill="none"><path d="M7 17 17 7M9 7h8v8" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          </span>
+        </li>
+      </ul>
+    </section>
+
+    <!-- ============ AUTOMATED MARKETING ============ -->
+    <section class="am-foundation" id="automated">
+      <div class="section-head">
+        <span class="eyebrow reveal-fade">[ 03 / Automated Marketing ]</span>
+        <h2 class="section-title">
+          <span class="line"><span class="word reveal">Your</span> <span class="word reveal">marketing</span> <span class="word reveal">shouldn't</span></span>
+          <span class="line"><span class="word reveal">be</span> <span class="word reveal">your</span> <em class="word reveal">full-time</em> <span class="word reveal">job.</span></span>
+        </h2>
+      </div>
+
+      <p class="am-foundation__lede reveal-fade">
+        A dedicated strategist running your social, SEO, email and ads — end to end. Full-team output, without the headcount.
+      </p>
+
+      <ul class="am-pillars">
+        <li class="am-pillar reveal-up">
+          <span class="am-pillar__num">01</span>
+          <h3>Riyadh-based senior strategist on your brand</h3>
+          <p>Named, salaried. The same person on your account, every month.</p>
+        </li>
+        <li class="am-pillar reveal-up">
+          <span class="am-pillar__num">02</span>
+          <h3>Human polish on every draft you publish</h3>
+          <p>AI gets it 60% there. Your strategist brings taste and judgment to the final 40%.</p>
+        </li>
+        <li class="am-pillar reveal-up">
+          <span class="am-pillar__num">03</span>
+          <h3>Direct access to the person doing the work</h3>
+          <p>Reach the person doing the work. No tickets, no shared inboxes, no escalation.</p>
+        </li>
+        <li class="am-pillar reveal-up">
+          <span class="am-pillar__num">04</span>
+          <h3>Real insights that build month over month</h3>
+          <p>Google Analytics integration. Clear signal on what's driving growth — not vanity dashboards.</p>
+        </li>
+      </ul>
+
+      <div class="about-cta__actions reveal-fade" style="margin-top: 64px; display: flex; gap: 16px; flex-wrap: wrap;">
+        <a href="automated-marketing.html" class="btn-solid" data-hover>
+          <span>See plans &amp; pricing</span>
+          <svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </a>
+        <a href="#contact" class="btn-ghost" data-hover>
+          <span>Book a discovery call</span>
+          <svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </a>
+      </div>
+    </section>
+
+    <!-- ============ CONTACT / CTA ============ -->
+    <section class="contact" id="contact">
+      <div class="contact__inner">
+        <span class="eyebrow reveal-fade">[ 04 / Let’s Talk ]</span>
+
+        <div class="contact__layout">
+          <div class="contact__col">
+            <h2 class="contact__title">
+              <span class="line"><span class="word reveal">Ready</span> <span class="word reveal">to</span></span>
+              <span class="line"><em class="word reveal">grow?</em></span>
+            </h2>
+
+            <a class="contact__mail" href="mailto:hello@newriyadhmedia.com" data-hover>
+              <span>hello@newriyadhmedia.com</span>
+              <svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            </a>
+            <a class="contact__mail" href="tel:+966500000000" data-hover>
+              <span>+966 50 000 0000</span>
+              <svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            </a>
+          </div>
+
+          <form class="cform reveal-fade" id="contact-form" novalidate>
+            <span class="cform__label">[ Send us a brief ]</span>
+
+            <div class="cform__row">
+              <div class="cform__field">
+                <label for="cf-name">Name</label>
+                <input type="text" id="cf-name" name="name" autocomplete="name" required>
+              </div>
+              <div class="cform__field">
+                <label for="cf-email">Email</label>
+                <input type="email" id="cf-email" name="email" autocomplete="email" required>
+              </div>
+            </div>
+
+            <div class="cform__field">
+              <label for="cf-company">Company <span class="cform__opt">(optional)</span></label>
+              <input type="text" id="cf-company" name="company" autocomplete="organization">
+            </div>
+
+            <div class="cform__field">
+              <label for="cf-message">Tell us about your company</label>
+              <textarea id="cf-message" name="message" rows="3" required></textarea>
+            </div>
+
+            <button type="submit" class="cform__submit" data-hover>
+              <span class="cform__submit-label">
+                <span class="cform__submit-text">Send message</span>
+                <span class="cform__submit-text cform__submit-text--alt">Send message</span>
+              </span>
+              <span class="cform__submit-arrow" aria-hidden="true">
+                <svg viewBox="0 0 24 24" fill="none"><path d="M5 12h14M13 6l6 6-6 6" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>
+              </span>
+            </button>
+
+            <p class="cform__success" aria-live="polite">
+              Thank you. We’ll be in touch shortly.
+            </p>
+          </form>
+        </div>
+
+        <div class="contact__grid contact__grid--single">
+          <div>
+            <span class="contact__label">Social</span>
+            <p>
+              <a href="#" data-hover>Instagram</a><br/>
+              <a href="#" data-hover>Behance</a><br/>
+              <a href="#" data-hover>LinkedIn</a>
+            </p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============ FOOTER ============ -->
+    <footer class="footer footer--minimal">
+      <div class="footer__bottom">
+        <span>© 2026 New Riyadh Media. All rights reserved.</span>
+        <span>Crafted with care in Riyadh.</span>
+      </div>
+    </footer>
+
+  </main>
+
+  <!-- ============ SERVICE PANELS ============ -->
+  <div class="spanel-backdrop" aria-hidden="true"></div>
+
+  <!-- Branding -->
+  <article class="spanel" id="spanel-branding" role="dialog" aria-modal="true" aria-label="Branding" hidden>
+    <div class="spanel__pattern" aria-hidden="true"><span class="spanel__bignum">01</span></div>
+    <div class="spanel__inner">
+      <header class="spanel__head">
+        <span class="spanel__num">01</span>
+        <button class="spanel__close" aria-label="Close" data-hover>
+          <svg viewBox="0 0 24 24" fill="none"><path d="M18 6 6 18M6 6l12 12" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"/></svg>
+        </button>
+      </header>
+      <h2 class="spanel__title">Branding</h2>
+      <div class="spanel__body">
+        <p class="spanel__lede">Saudi brands carry a unique weight. They speak to a culture that values heritage, craft and the quiet confidence of knowing exactly who you are. We build identities that hold both — modern enough for global stages, rooted enough to mean something at home.</p>
+        <p>A brand is not a logo. It is a decision made a thousand times a day — in the words you choose, the colours you wear, the way a package feels in someone's hand. We bring every one of those decisions into alignment.</p>
+        <div class="spanel__delivers">
+          <span class="spanel__delivers-label">What we deliver</span>
+          <ul>
+            <li>Brand strategy &amp; naming</li>
+            <li>Logo &amp; visual identity systems</li>
+            <li>Typography &amp; colour</li>
+            <li>Brand voice &amp; messaging</li>
+            <li>Brand guidelines</li>
+            <li>Packaging &amp; print applications</li>
+          </ul>
+        </div>
+      </div>
+      <a href="#contact" class="spanel__cta" data-hover>Start a branding project
+        <svg viewBox="0 0 24 24" fill="none"><path d="M5 12h14M13 6l6 6-6 6" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      </a>
+    </div>
+  </article>
+
+  <!-- Strategy & Positioning -->
+  <article class="spanel" id="spanel-strategy" role="dialog" aria-modal="true" aria-label="Strategy & Positioning" hidden>
+    <div class="spanel__pattern" aria-hidden="true"><span class="spanel__bignum">02</span></div>
+    <div class="spanel__inner">
+      <header class="spanel__head">
+        <span class="spanel__num">02</span>
+        <button class="spanel__close" aria-label="Close" data-hover>
+          <svg viewBox="0 0 24 24" fill="none"><path d="M18 6 6 18M6 6l12 12" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"/></svg>
+        </button>
+      </header>
+      <h2 class="spanel__title">Strategy &amp; Positioning</h2>
+      <div class="spanel__body">
+        <p class="spanel__lede">The Saudi market is rewriting its own story at speed. We slow down long enough to understand where your brand truly sits — who it is for, what it stands for, and why it matters in a market that has never had more ambition.</p>
+        <p>Sharp positioning before a single pixel is designed. We work through audience research, competitive mapping and cultural landscape analysis to find the space only you can own — then we build the creative platform that holds it.</p>
+        <div class="spanel__delivers">
+          <span class="spanel__delivers-label">What we deliver</span>
+          <ul>
+            <li>Audience &amp; market research</li>
+            <li>Competitive positioning</li>
+            <li>Brand architecture</li>
+            <li>Brand narrative &amp; manifesto</li>
+            <li>Go-to-market strategy</li>
+            <li>Campaign platforms</li>
+          </ul>
+        </div>
+      </div>
+      <a href="#contact" class="spanel__cta" data-hover>Build your strategy
+        <svg viewBox="0 0 24 24" fill="none"><path d="M5 12h14M13 6l6 6-6 6" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      </a>
+    </div>
+  </article>
+
+  <!-- Digital Marketing -->
+  <article class="spanel" id="spanel-digital" role="dialog" aria-modal="true" aria-label="Digital Marketing" hidden>
+    <div class="spanel__pattern" aria-hidden="true"><span class="spanel__bignum">03</span></div>
+    <div class="spanel__inner">
+      <header class="spanel__head">
+        <span class="spanel__num">03</span>
+        <button class="spanel__close" aria-label="Close" data-hover>
+          <svg viewBox="0 0 24 24" fill="none"><path d="M18 6 6 18M6 6l12 12" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"/></svg>
+        </button>
+      </header>
+      <h2 class="spanel__title">Digital Marketing</h2>
+      <div class="spanel__body">
+        <p class="spanel__lede">Saudi audiences are among the most digitally active in the world. We run campaigns built for that reality — performance-first, culturally fluent, timed to the moments that matter in the Kingdom: Ramadan, National Day, Founding Day, and the everyday scroll.</p>
+        <p>From paid social to search to programmatic display, we manage every lever with the same care we bring to creative. Numbers that grow your brand, not just your dashboard.</p>
+        <div class="spanel__delivers">
+          <span class="spanel__delivers-label">What we deliver</span>
+          <ul>
+            <li>Paid social (Instagram, Snapchat, TikTok, X)</li>
+            <li>Google &amp; search campaigns</li>
+            <li>SEO &amp; content strategy</li>
+            <li>Influencer partnerships</li>
+            <li>Analytics &amp; reporting</li>
+            <li>Seasonal campaign planning</li>
+          </ul>
+        </div>
+
+        <div class="spanel__tools">
+          <span class="spanel__delivers-label">Try our free AI tools</span>
+          <p>See it before you commit. Two AI tools tuned for the Saudi market, in Arabic or English — no sign-up. Build a positioning and 4-week campaign plan, or scan your site to find what's holding it back.</p>
+          <div class="spanel__tools-actions">
+            <a href="http://localhost:3100/try" class="btn-solid" target="_blank" rel="noopener" data-hover>
+              <span>AI Marketing Test</span>
+              <svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            </a>
+            <a href="http://localhost:3100/diagnostics" class="btn-ghost" target="_blank" rel="noopener" data-hover>
+              <span>Website Diagnostics</span>
+              <svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            </a>
+          </div>
+        </div>
+      </div>
+      <a href="#contact" class="spanel__cta" data-hover>Grow your audience
+        <svg viewBox="0 0 24 24" fill="none"><path d="M5 12h14M13 6l6 6-6 6" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      </a>
+    </div>
+  </article>
+
+  <!-- Campaigns & Content -->
+  <article class="spanel" id="spanel-campaigns" role="dialog" aria-modal="true" aria-label="Campaigns & Content" hidden>
+    <div class="spanel__pattern" aria-hidden="true"><span class="spanel__bignum">04</span></div>
+    <div class="spanel__inner">
+      <header class="spanel__head">
+        <span class="spanel__num">04</span>
+        <button class="spanel__close" aria-label="Close" data-hover>
+          <svg viewBox="0 0 24 24" fill="none"><path d="M18 6 6 18M6 6l12 12" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"/></svg>
+        </button>
+      </header>
+      <h2 class="spanel__title">Campaigns &amp; Content</h2>
+      <div class="spanel__body">
+        <p class="spanel__lede">The best Saudi campaigns are not adaptations of Western ideas with Arabic copy dropped in. They are built from a Saudi truth — a cultural insight, a shared feeling, a moment that only lands if you were raised in it. That is where we start.</p>
+        <p>Concept, art direction, copywriting, photography, video and post-production all in-house. The vision stays intact from the first sketch to the final file delivered to media.</p>
+        <div class="spanel__delivers">
+          <span class="spanel__delivers-label">What we deliver</span>
+          <ul>
+            <li>Campaign concepts &amp; art direction</li>
+            <li>Social content systems</li>
+            <li>Arabic &amp; English copywriting</li>
+            <li>Motion graphics &amp; reels</li>
+            <li>Editorial &amp; long-form content</li>
+            <li>Content calendars &amp; management</li>
+          </ul>
+        </div>
+      </div>
+      <a href="#contact" class="spanel__cta" data-hover>Brief us on your campaign
+        <svg viewBox="0 0 24 24" fill="none"><path d="M5 12h14M13 6l6 6-6 6" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      </a>
+    </div>
+  </article>
+
+  <!-- Photography & Videography -->
+  <article class="spanel" id="spanel-production" role="dialog" aria-modal="true" aria-label="Photography & Videography" hidden>
+    <div class="spanel__pattern" aria-hidden="true"><span class="spanel__bignum">05</span></div>
+    <div class="spanel__inner">
+      <header class="spanel__head">
+        <span class="spanel__num">05</span>
+        <button class="spanel__close" aria-label="Close" data-hover>
+          <svg viewBox="0 0 24 24" fill="none"><path d="M18 6 6 18M6 6l12 12" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"/></svg>
+        </button>
+      </header>
+      <h2 class="spanel__title">Photography &amp; Videography</h2>
+      <div class="spanel__body">
+        <p class="spanel__lede">Light in Riyadh is unlike anywhere else — the quality of the desert afternoon, the warmth of evening in Al Diriyah, the cool drama of KAFD glass towers at dawn. We know how to use it. In-house studio and on-location production built for brands that take their visuals seriously.</p>
+        <p>From a product still on a cream surface to a cinematic brand film shot across the Kingdom, we direct and deliver every frame with the same considered eye.</p>
+        <div class="spanel__delivers">
+          <span class="spanel__delivers-label">What we deliver</span>
+          <ul>
+            <li>Product &amp; commercial photography</li>
+            <li>Editorial &amp; lifestyle photography</li>
+            <li>Brand films &amp; campaign videos</li>
+            <li>Social-first reels &amp; shorts</li>
+            <li>Post-production &amp; colour grading</li>
+            <li>Drone &amp; aerial coverage</li>
+          </ul>
+        </div>
+      </div>
+      <a href="#contact" class="spanel__cta" data-hover>Book a production
+        <svg viewBox="0 0 24 24" fill="none"><path d="M5 12h14M13 6l6 6-6 6" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      </a>
+    </div>
+  </article>
+
+  <!-- Event Planning -->
+  <article class="spanel" id="spanel-events" role="dialog" aria-modal="true" aria-label="Event Planning" hidden>
+    <div class="spanel__pattern" aria-hidden="true"><span class="spanel__bignum">06</span></div>
+    <div class="spanel__inner">
+      <header class="spanel__head">
+        <span class="spanel__num">06</span>
+        <button class="spanel__close" aria-label="Close" data-hover>
+          <svg viewBox="0 0 24 24" fill="none"><path d="M18 6 6 18M6 6l12 12" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"/></svg>
+        </button>
+      </header>
+      <h2 class="spanel__title">Event Planning</h2>
+      <div class="spanel__body">
+        <p class="spanel__lede">Riyadh is one of the most exciting event cities in the world right now. From intimate brand dinners in the mud-brick corridors of Al Diriyah to large-scale activations on the KAFD waterfront — we plan, produce and deliver experiences that feel like the brand made them, not a vendor.</p>
+        <p>Creative concept to logistics, venue, catering, production and on-the-day management. A single point of contact for every detail.</p>
+        <div class="spanel__delivers">
+          <span class="spanel__delivers-label">What we deliver</span>
+          <ul>
+            <li>Brand launches &amp; activations</li>
+            <li>Product reveals &amp; press events</li>
+            <li>Corporate &amp; executive dinners</li>
+            <li>Experiential &amp; pop-up concepts</li>
+            <li>Full production &amp; logistics</li>
+            <li>On-the-day management</li>
+          </ul>
+        </div>
+      </div>
+      <a href="#contact" class="spanel__cta" data-hover>Plan your event
+        <svg viewBox="0 0 24 24" fill="none"><path d="M5 12h14M13 6l6 6-6 6" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      </a>
+    </div>
+  </article>
+
+  <!-- Libraries -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/gh/studio-freight/lenis@1.0.42/bundled/lenis.min.js"></script>
+  <script src="script.js"></script>
+</body>
+</html>

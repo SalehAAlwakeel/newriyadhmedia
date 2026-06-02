@@ -1,0 +1,375 @@
+"use client";
+
+import { useEffect, useRef, useState } from "react";
+import type { BrandKit as BrandKitType } from "@/lib/db";
+
+const EMPTY: BrandKitType = {
+  primaryColor: "#15352b",
+  secondaryColor: "#7cae3f",
+  logoUrl: "",
+  voice: "",
+  fonts: "Akzidenz-Grotesk Next",
+  purpose: "",
+  audience: "",
+  character: "",
+  toneTraits: [],
+  emotionTraits: [],
+};
+
+const TABS = ["Media Library", "Brand Style", "Brand Voice", "Brand Profile", "Source Materials"] as const;
+type Tab = (typeof TABS)[number];
+
+const SUGGESTED_TONE = [
+  "Formal and authoritative",
+  "Encouraging and supportive",
+  "Informative and educational",
+  "Friendly and conversational",
+  "Confident and bold",
+];
+
+const SUGGESTED_EMOTION = [
+  "Pride in local heritage",
+  "Trust in services",
+  "Community spirit and inclusivity",
+  "Energy and momentum",
+  "Calm reassurance",
+];
+
+interface MediaAsset {
+  id: string;
+  url: string;
+  filename: string;
+  kind: "image" | "video" | "other";
+  uploadedAt: string;
+}
+
+export default function BrandKit({ initial, company }: { initial: BrandKitType | null; company: string }) {
+  const [tab, setTab] = useState<Tab>("Media Library");
+  const [kit, setKit] = useState<BrandKitType>(() => ({ ...EMPTY, ...(initial ?? {}) }));
+  const [busy, setBusy] = useState(false);
+  const [saved, setSaved] = useState<"idle" | "saving" | "saved">("idle");
+  const business = company || "Your business";
+
+  // ---- Auto-save (debounced) so navigating away keeps changes -------------
+  const isFirstRender = useRef(true);
+  useEffect(() => {
+    if (isFirstRender.current) {
+      isFirstRender.current = false;
+      return;
+    }
+    setSaved("saving");
+    const id = setTimeout(async () => {
+      try {
+        await fetch("/api/profile", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ brandKit: kit }),
+        });
+        setSaved("saved");
+      } catch {
+        setSaved("idle");
+      }
+    }, 700);
+    return () => clearTimeout(id);
+  }, [kit]);
+
+  function set<K extends keyof BrandKitType>(k: K, v: BrandKitType[K]) {
+    setKit((p) => ({ ...p, [k]: v }));
+  }
+
+  function toggleChip(field: "toneTraits" | "emotionTraits", value: string) {
+    setKit((p) => {
+      const list = p[field] ?? [];
+      const next = list.includes(value) ? list.filter((x) => x !== value) : [...list, value];
+      return { ...p, [field]: next };
+    });
+  }
+
+  async function saveNow() {
+    setBusy(true);
+    setSaved("saving");
+    try {
+      await fetch("/api/profile", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ brandKit: kit }),
+      });
+      setSaved("saved");
+    } finally {
+      setBusy(false);
+    }
+  }
+
+  return (
+    <div className="bk">
+      <div className="bk__tabs">
+        {TABS.map((t) => (
+          <button key={t} className={`bk__tab ${tab === t ? "is-active" : ""}`} onClick={() => setTab(t)}>{t}</button>
+        ))}
+        <span className="bk__autosave" aria-live="polite">
+          {saved === "saving" ? "Saving…" : saved === "saved" ? "✓ Saved" : ""}
+        </span>
+      </div>
+
+      <div className="bk__panel">
+        {tab === "Media Library" && <MediaLibrary />}
+
+        {tab === "Brand Style" && (
+          <>
+            <h2 className="bk__h">Brand Style</h2>
+            <div className="style-grid">
+              <div className="style-card">
+                <div className="style-card__head"><strong>Logo</strong></div>
+                {kit.logoUrl ? (
+                  // eslint-disable-next-line @next/next/no-img-element
+                  <img className="style-card__logo" src={kit.logoUrl} alt="" onError={(e) => ((e.target as HTMLImageElement).style.opacity = "0.3")} />
+                ) : (
+                  <div className="style-card__logo style-card__logo--empty">{business.charAt(0)}</div>
+                )}
+                <input className="input" placeholder="Logo URL" value={kit.logoUrl} onChange={(e) => set("logoUrl", e.target.value)} />
+              </div>
+
+              <div className="style-card">
+                <div className="style-card__head"><strong>Visual Style</strong></div>
+                {/* eslint-disable-next-line @next/next/no-img-element */}
+                <img className="style-card__visual" src="https://images.unsplash.com/photo-1522202176988-66273c2fd55f?w=500&q=70&auto=format&fit=crop" alt="" />
+                <span className="style-card__tag">Selected style · <strong>Saturated Film</strong></span>
+              </div>
+
+              <div className="style-card">
+                <div className="style-card__head"><strong>Fonts</strong></div>
+                <div className="style-card__font">{kit.fonts || "Akzidenz-Grotesk Next"}</div>
+                <input className="input" placeholder="Title + body fonts" value={kit.fonts} onChange={(e) => set("fonts", e.target.value)} />
+              </div>
+
+              <div className="style-card">
+                <div className="style-card__head"><strong>Colors</strong></div>
+                <div className="color-swatches">
+                  <label className="swatch"><input type="color" value={kit.primaryColor} onChange={(e) => set("primaryColor", e.target.value)} /><span>Primary</span></label>
+                  <label className="swatch"><input type="color" value={kit.secondaryColor} onChange={(e) => set("secondaryColor", e.target.value)} /><span>Secondary</span></label>
+                </div>
+              </div>
+            </div>
+            <div className="ds-saverow">
+              <span className="ds-saved" aria-live="polite">{saved === "saved" && "Saved ✓"}</span>
+              <button className="btn" onClick={saveNow} disabled={busy}>{busy ? "Saving…" : "Save brand style"}</button>
+            </div>
+          </>
+        )}
+
+        {tab === "Brand Voice" && (
+          <>
+            <h2 className="bk__h">Brand Voice</h2>
+            <p className="bk__sub">Everything here is fed into the AI strategist&rsquo;s system prompt — change it and the next post sounds different immediately.</p>
+            <div className="voice">
+              <div className="field">
+                <label>Purpose</label>
+                <textarea className="input" rows={3} dir="auto" value={kit.purpose ?? ""} onChange={(e) => set("purpose", e.target.value)} placeholder="What is this brand here to do for its audience?" />
+              </div>
+              <div className="field">
+                <label>Audience</label>
+                <textarea className="input" rows={3} dir="auto" value={kit.audience ?? ""} onChange={(e) => set("audience", e.target.value)} placeholder="Who exactly are you talking to?" />
+              </div>
+              <div className="field">
+                <label>Tone</label>
+                <ChipPicker
+                  selected={kit.toneTraits ?? []}
+                  suggested={SUGGESTED_TONE}
+                  onToggle={(v) => toggleChip("toneTraits", v)}
+                  onAddCustom={(v) => set("toneTraits", [...(kit.toneTraits ?? []), v])}
+                />
+              </div>
+              <div className="field">
+                <label>Emotion</label>
+                <ChipPicker
+                  selected={kit.emotionTraits ?? []}
+                  suggested={SUGGESTED_EMOTION}
+                  onToggle={(v) => toggleChip("emotionTraits", v)}
+                  onAddCustom={(v) => set("emotionTraits", [...(kit.emotionTraits ?? []), v])}
+                />
+              </div>
+              <div className="field">
+                <label>Character</label>
+                <textarea className="input" rows={3} dir="auto" value={kit.character ?? ""} onChange={(e) => set("character", e.target.value)} placeholder="How would a customer describe this brand to a friend?" />
+              </div>
+              <div className="field">
+                <label>Voice notes (free text)</label>
+                <textarea className="input" rows={3} dir="auto" value={kit.voice} onChange={(e) => set("voice", e.target.value)} placeholder="Anything else the strategist should keep in mind." />
+              </div>
+            </div>
+            <div className="ds-saverow">
+              <span className="ds-saved" aria-live="polite">{saved === "saved" && "Saved ✓"}</span>
+              <button className="btn" onClick={saveNow} disabled={busy}>{busy ? "Saving…" : "Save brand voice"}</button>
+            </div>
+          </>
+        )}
+
+        {tab === "Brand Profile" && (
+          <div className="profile">
+            <ProfileBlock title="Business Name"><strong>{business}</strong></ProfileBlock>
+            <ProfileBlock title="Business Overview & Positioning">
+              <p>{kit.purpose || `${business} is dedicated to serving its community with reliable services and a focus on improving everyday quality of life.`}</p>
+            </ProfileBlock>
+            <ProfileBlock title="Audience">
+              <p>{kit.audience || "Define your audience in the Brand Voice tab to populate this section."}</p>
+            </ProfileBlock>
+            <ProfileBlock title="Tone">
+              {(kit.toneTraits ?? []).length === 0 ? (
+                <p className="bk__sub">No tone selected yet.</p>
+              ) : (
+                <ul>{(kit.toneTraits ?? []).map((t) => <li key={t}>{t}</li>)}</ul>
+              )}
+            </ProfileBlock>
+            <ProfileBlock title="Character">
+              <p>{kit.character || "Describe the brand's character in the Brand Voice tab."}</p>
+            </ProfileBlock>
+          </div>
+        )}
+
+        {tab === "Source Materials" && <SourceMaterials />}
+      </div>
+    </div>
+  );
+}
+
+function ChipPicker({
+  selected,
+  suggested,
+  onToggle,
+  onAddCustom,
+}: {
+  selected: string[];
+  suggested: string[];
+  onToggle: (v: string) => void;
+  onAddCustom: (v: string) => void;
+}) {
+  const [draft, setDraft] = useState("");
+  const all = Array.from(new Set([...selected, ...suggested]));
+  return (
+    <div className="chips">
+      {all.map((t) => (
+        <button key={t} type="button" className={`chip ${selected.includes(t) ? "is-on" : ""}`} onClick={() => onToggle(t)}>
+          {t}{selected.includes(t) ? " ×" : ""}
+        </button>
+      ))}
+      <span className="chip chip--add">
+        <input
+          className="chip__input"
+          placeholder="+ Add"
+          value={draft}
+          onChange={(e) => setDraft(e.target.value)}
+          onKeyDown={(e) => {
+            if (e.key === "Enter" && draft.trim()) {
+              e.preventDefault();
+              onAddCustom(draft.trim());
+              setDraft("");
+            }
+          }}
+        />
+      </span>
+    </div>
+  );
+}
+
+function MediaLibrary() {
+  const [media, setMedia] = useState<MediaAsset[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [busy, setBusy] = useState(false);
+
+  useEffect(() => {
+    (async () => {
+      try {
+        const res = await fetch("/api/media");
+        const data = await res.json();
+        if (res.ok && Array.isArray(data.media)) setMedia(data.media);
+      } finally {
+        setLoading(false);
+      }
+    })();
+  }, []);
+
+  async function upload(files: FileList | null) {
+    if (!files || files.length === 0) return;
+    setBusy(true);
+    try {
+      for (const f of Array.from(files)) {
+        const fd = new FormData();
+        fd.append("file", f);
+        const res = await fetch("/api/media", { method: "POST", body: fd });
+        const data = await res.json().catch(() => ({}));
+        if (res.ok && data.asset) setMedia((m) => [data.asset, ...m]);
+      }
+    } finally {
+      setBusy(false);
+    }
+  }
+
+  async function remove(id: string) {
+    if (!confirm("Delete this asset?")) return;
+    const res = await fetch(`/api/media/${id}`, { method: "DELETE" });
+    if (res.ok) setMedia((m) => m.filter((x) => x.id !== id));
+  }
+
+  return (
+    <>
+      <div className="bk__panelhead">
+        <div>
+          <h2 className="bk__h">Media Library <span>{media.filter((m) => m.kind === "image").length} images, {media.filter((m) => m.kind === "video").length} videos</span></h2>
+          <p className="bk__sub">Upload pictures and videos. The AI uses these when generating posts, blogs and emails.</p>
+        </div>
+        <label className="btn btn--sm">
+          {busy ? "Uploading…" : "+ Add New Media"}
+          <input type="file" accept="image/*,video/*" multiple style={{ display: "none" }} onChange={(e) => upload(e.target.files)} disabled={busy} />
+        </label>
+      </div>
+      {loading ? (
+        <p className="bk__sub">Loading…</p>
+      ) : media.length === 0 ? (
+        <div className="empty-card">
+          <p>No media yet. Upload pictures or short videos to give the AI something to work with.</p>
+        </div>
+      ) : (
+        <div className="media-grid">
+          {media.map((m) => (
+            <figure key={m.id} className="media-card">
+              {m.kind === "video" ? (
+                <video src={m.url} muted />
+              ) : (
+                // eslint-disable-next-line @next/next/no-img-element
+                <img src={m.url} alt={m.filename} />
+              )}
+              <figcaption dir="auto">{m.filename}</figcaption>
+              <span className="media-card__meta">{m.kind} · {new Date(m.uploadedAt).toLocaleDateString()}</span>
+              <button className="media-card__del" onClick={() => remove(m.id)} aria-label="Delete asset">×</button>
+            </figure>
+          ))}
+        </div>
+      )}
+    </>
+  );
+}
+
+function SourceMaterials() {
+  return (
+    <>
+      <div className="bk__panelhead">
+        <div>
+          <h2 className="bk__h">Source Materials</h2>
+          <p className="bk__sub">Coming soon — paste website URLs and we&rsquo;ll scrape them into the brand kit.</p>
+        </div>
+      </div>
+      <div className="empty-card">
+        <p>For now, use the AI Strategist or Brand Voice tab to feed source material directly.</p>
+      </div>
+    </>
+  );
+}
+
+function ProfileBlock({ title, children }: { title: string; children: React.ReactNode }) {
+  return (
+    <section className="profile__block">
+      <div className="profile__head"><h3>{title}</h3></div>
+      <div className="profile__body">{children}</div>
+    </section>
+  );
+}

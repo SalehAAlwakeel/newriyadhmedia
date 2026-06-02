@@ -1,0 +1,76 @@
+// New Riyadh Media — data model.
+// SQLite for local/dev (zero setup, transactional, no more JSON write races).
+// To move to Postgres later: change `provider` to "postgresql" and point
+// DATABASE_URL at the managed instance — the models below are portable.
+//
+// Nested/variable-shape values (connections, brand kit, content prefs, AI
+// memory, hashtags, image URLs, publications) are stored as JSON strings so
+// the app-layer types in lib/db.ts stay exactly the same.
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id           String  @id
+  email        String  @unique
+  name         String
+  company      String  @default("")
+  passwordHash String
+  subscribed   Boolean @default(false)
+  plan         String?
+  createdAt    String
+  credits      Int?
+
+  // JSON-encoded columns (see lib/db.ts for (de)serialization)
+  connections  String  @default("[]")
+  brandKit     String?
+  contentPrefs String?
+  aiMemory     String  @default("[]")
+
+  @@map("users")
+}
+
+model Post {
+  id           String  @id
+  userId       String
+  type         String
+  campaignName String
+  topic        String
+  caption      String
+  body         String?
+  scheduledFor String
+  status       String
+  createdAt    String
+  error        String?
+
+  // JSON-encoded columns
+  hashtags     String  @default("[]")
+  imageUrls    String  @default("[]")
+  publications String?
+
+  @@index([userId])
+  @@map("posts")
+}
+
+model Media {
+  id         String  @id
+  userId     String
+  filename   String
+  mime       String
+  sizeBytes  Int
+  kind       String
+  source     String
+  label      String?
+  url        String
+  uploadedAt String
+  postId     String?
+
+  @@index([userId])
+  @@map("media")
+}

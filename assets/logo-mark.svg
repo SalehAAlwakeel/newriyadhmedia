@@ -1,0 +1,15 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 400" role="img" aria-label="New Riyadh Media monogram">
+  <g fill="currentColor">
+    <rect x="20" y="20" width="360" height="360"
+          fill="none" stroke="currentColor" stroke-width="6"
+          vector-effect="non-scaling-stroke"/>
+
+    <text x="200" y="295"
+          text-anchor="middle"
+          font-family="'Cormorant Garamond', 'Cormorant', 'Didot', 'Times New Roman', serif"
+          font-size="290"
+          font-weight="500"
+          letter-spacing="-56"
+          fill="currentColor">NRM</text>
+  </g>
+</svg>

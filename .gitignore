@@ -1,0 +1,39 @@
+# --- Secrets (NEVER commit) ---
+.env
+.env.*
+!.env.example
+**/.env
+**/.env.*
+!**/.env.example
+
+# --- Dependencies ---
+node_modules/
+**/node_modules/
+
+# --- Next.js build output ---
+.next/
+**/.next/
+out/
+**/out/
+build/
+**/build/
+
+# --- Local data, uploads, and the SQLite database ---
+.data/
+**/.data/
+*.db
+*.db-journal
+**/*.db
+**/*.db-journal
+/leads.local.json
+**/leads.local.json
+
+# --- TypeScript / tooling ---
+*.tsbuildinfo
+**/*.tsbuildinfo
+next-env.d.ts
+**/next-env.d.ts
+
+# --- OS / editor noise ---
+.DS_Store
+Thumbs.db
