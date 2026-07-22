@@ -1,13 +1,14 @@
 import { NextResponse, type NextRequest } from "next/server";
 import { cookies } from "next/headers";
-import { updateUser, findUserById } from "@/lib/db";
+import crypto from "crypto";
+import { updateUser, findUserById, addAiMemory } from "@/lib/db";
 import { getPlatform } from "@/lib/platforms";
-import { mockAudienceSize, mockProviderAccountId, redirectUri, verifyOAuthState } from "@/lib/social";
+import { redirectUri, verifyOAuthState } from "@/lib/social";
+import { encryptSecret } from "@/lib/crypto";
+import { exchangeMetaLongLivedToken, resolveInstagramAccount } from "@/lib/instagram";
 
 export const runtime = "nodejs";
 
-// Step 2 of real OAuth: provider redirects back here with ?code. We verify the
-// signed state, exchange the code for tokens, and persist the connection.
 export async function GET(req: NextRequest, ctx: { params: Promise<{ platform: string }> }) {
   const { platform } = await ctx.params;
   const origin = req.nextUrl.origin;
@@ -22,7 +23,6 @@ export async function GET(req: NextRequest, ctx: { params: Promise<{ platform: s
   const def = getPlatform(platform);
   if (!def || !def.oauth) return back(`error=unknown_platform`);
 
-  // Validate the round-tripped state against what we stored + the signature.
   const store = await cookies();
   const cookieState = store.get(`oauth_state_${platform}`)?.value;
   const verified = verifyOAuthState(state);
@@ -34,8 +34,7 @@ export async function GET(req: NextRequest, ctx: { params: Promise<{ platform: s
   const user = await findUserById(verified.userId);
   if (!user) return NextResponse.redirect(`${origin}/login`);
 
-  // Exchange the authorization code for tokens.
-  let accessToken: string | undefined;
+  let accessToken: string;
   let refreshToken: string | undefined;
   let expiresIn: number | undefined;
   try {
@@ -61,22 +60,54 @@ export async function GET(req: NextRequest, ctx: { params: Promise<{ platform: s
     return back(`error=token_exchange&platform=${platform}`);
   }
 
-  const handle = verified.handle || def.sampleHandle;
-  const connection = {
-    platform: def.id,
-    handle,
-    connectedAt: new Date().toISOString(),
-    capabilities: def.capabilities,
-    providerAccountId: mockProviderAccountId(def.id, handle),
-    accessToken,
-    refreshToken,
-    tokenExpiresAt: expiresIn ? new Date(Date.now() + expiresIn * 1000).toISOString() : undefined,
-    lastSyncedAt: new Date().toISOString(),
-    audienceSize: mockAudienceSize(def.id, handle),
-  };
+  const now = new Date().toISOString();
+  let connection;
 
+  if (platform === "instagram") {
+    try {
+      const clientId = process.env[def.oauth.clientIdEnv] as string;
+      const clientSecret = process.env[def.oauth.clientSecretEnv] as string;
+      const long = await exchangeMetaLongLivedToken(accessToken, clientId, clientSecret);
+      const ig = await resolveInstagramAccount(long.accessToken);
+
+      connection = {
+        platform: def.id,
+        handle: `@${ig.username}`,
+        connectedAt: now,
+        authMethod: "oauth" as const,
+        capabilities: ["publish", "analytics"] as import("@/lib/db").ConnectionCapability[],
+        providerAccountId: ig.igUserId,
+        metaPageId: ig.pageId,
+        accessToken: encryptSecret(ig.pageAccessToken),
+        refreshToken: encryptSecret(long.accessToken),
+        tokenExpiresAt: long.expiresIn
+          ? new Date(Date.now() + long.expiresIn * 1000).toISOString()
+          : undefined,
+        avatarUrl: ig.profilePicture,
+        audienceSize: ig.followersCount,
+        lastSyncedAt: now,
+      };
+    } catch (e) {
+      const msg = e instanceof Error ? e.message : "instagram_setup";
+      return back(`error=${encodeURIComponent(msg)}&platform=${platform}`);
+    }
+  } else {
+    return back(`error=not_available&platform=${platform}`);
+  }
+
+  const previous = user.connections.find((c) => c.platform === def.id);
   const connections = [...user.connections.filter((c) => c.platform !== def.id), connection];
   await updateUser(user.id, { connections });
+
+  if (!previous) {
+    await addAiMemory(user.id, {
+      id: crypto.randomUUID(),
+      kind: "fact",
+      text: `Connected ${def.name} (${connection.handle}) via official OAuth.`,
+      source: "auto",
+      createdAt: now,
+    });
+  }
 
   return back(`connected=${platform}`);
 }

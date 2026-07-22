@@ -1,4 +1,5 @@
 import Link from "next/link";
+import { BarChart3, Zap, Brain, Link2, ArrowRight } from "lucide-react";
 import PageHead from "../PageHead";
 import Memory from "./Memory";
 import PlatformIcon from "../integrations/PlatformIcon";
@@ -13,9 +14,9 @@ const STEPS = [
 ];
 
 const FEATURES = [
-  { title: "Benchmarks, not vanity metrics", desc: "See how your engagement, save rate and follower growth stack up against similar businesses — not the industry average.", cls: "blue", icon: "📊" },
-  { title: "Actions, not just insights", desc: "It doesn't just show you the data — it tells you what to do next and applies changes so nothing slips through.", cls: "violet", icon: "⚡" },
-  { title: "Gets smarter over time", desc: "Every post, campaign and keyword builds a performance model unique to your business that compounds each week.", cls: "amber", icon: "🧠" },
+  { title: "Benchmarks, not vanity metrics", desc: "See how your engagement, save rate and follower growth stack up against similar businesses — not the industry average.", cls: "blue", icon: <BarChart3 size={22} /> },
+  { title: "Actions, not just insights", desc: "It doesn't just show you the data — it tells you what to do next and applies changes so nothing slips through.", cls: "violet", icon: <Zap size={22} /> },
+  { title: "Gets smarter over time", desc: "Every post, campaign and keyword builds a performance model unique to your business that compounds each week.", cls: "amber", icon: <Brain size={22} /> },
 ];
 
 export default function LearningPage() {
@@ -30,13 +31,11 @@ export default function LearningPage() {
           <h2>Enable your marketing to get smarter every week</h2>
           <p>Learning Loop tracks what works across your content, paid ads, organic and SEO — then tells you exactly what to do next. Connect your accounts and the AI starts learning from day one.</p>
           <div className="learn-hero__cta">
-            <Link href="/dashboard/integrations" className="btn">🔗 Connect your accounts</Link>
+            <Link href="/dashboard/integrations" className="btn"><Link2 size={16} /> Connect your accounts</Link>
             <span className="learn-hero__pill">Takes ~2 min</span>
           </div>
         </div>
       </section>
-
-      <p className="learn-lift">Brands like yours see <strong>+12% engagement</strong> lift in the first 30 days</p>
 
       <h2 className="bk__h" style={{ marginTop: 8 }}>How Learning Loop Works</h2>
       <div className="learn-steps">
@@ -72,7 +71,7 @@ export default function LearningPage() {
           <strong>Connect your channels to unlock Learning Loop</strong>
           <span>Works with Instagram, LinkedIn, X, YouTube, Google Ads, Meta Ads, Google Analytics and more.</span>
         </div>
-        <Link href="/dashboard/integrations" className="btn btn--ghost btn--sm">Connect Accounts →</Link>
+        <Link href="/dashboard/integrations" className="btn btn--ghost btn--sm">Connect Accounts <ArrowRight size={14} /></Link>
       </div>
     </div>
   );

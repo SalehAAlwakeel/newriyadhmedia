@@ -1,9 +1,11 @@
+import Link from "next/link";
+import { Sparkles } from "lucide-react";
 import { getCurrentUser } from "@/lib/auth";
 import { listPosts } from "@/lib/db";
 import PageHead from "../PageHead";
 import ApprovalsList from "./ApprovalsList";
-import GenerateButton from "../GenerateButton";
 
+export const dynamic = "force-dynamic";
 export const metadata = { title: "Approvals · New Riyadh Media" };
 
 export default async function ApprovalsPage() {
@@ -14,8 +16,8 @@ export default async function ApprovalsPage() {
       <PageHead
         eyebrow="Create · Approvals"
         title="Approvals"
-        sub="Nothing posts without your sign-off. Review the week's content, then approve or reject."
-        action={<GenerateButton label="✦ Generate more" className="btn btn--sm" />}
+        sub="Nothing posts without your sign-off. Review, then approve to schedule it onto your calendar."
+        action={<Link href="/dashboard/assistant" className="btn btn--sm"><Sparkles size={15} /> Generate in studio</Link>}
       />
       <ApprovalsList initial={posts} />
     </div>

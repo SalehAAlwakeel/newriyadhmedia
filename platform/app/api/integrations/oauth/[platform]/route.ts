@@ -1,7 +1,7 @@
 import { NextResponse, type NextRequest } from "next/server";
 import { cookies } from "next/headers";
 import { getCurrentUser } from "@/lib/auth";
-import { getPlatform, oauthConfigured } from "@/lib/platforms";
+import { getPlatform, isPlatformLive, oauthConfigured } from "@/lib/platforms";
 import { redirectUri, signOAuthState } from "@/lib/social";
 
 export const runtime = "nodejs";
@@ -19,6 +19,7 @@ export async function GET(req: NextRequest, ctx: { params: Promise<{ platform: s
 
   const def = getPlatform(platform);
   if (!def || !def.oauth) return back(`error=unknown_platform`);
+  if (!isPlatformLive(platform)) return back(`error=not_available&platform=${platform}`);
   if (!oauthConfigured(def)) return back(`error=not_configured&platform=${platform}`);
 
   const handle = req.nextUrl.searchParams.get("handle") ?? def.sampleHandle;

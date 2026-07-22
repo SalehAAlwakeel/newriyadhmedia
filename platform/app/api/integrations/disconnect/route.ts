@@ -2,6 +2,7 @@ import { NextResponse } from "next/server";
 import { z } from "zod";
 import { getCurrentUser } from "@/lib/auth";
 import { updateUser } from "@/lib/db";
+import { publicConnections } from "@/lib/social";
 
 export const runtime = "nodejs";
 
@@ -16,5 +17,5 @@ export async function POST(req: Request) {
 
   const connections = user.connections.filter((c) => c.platform !== parsed.data.platform);
   await updateUser(user.id, { connections });
-  return NextResponse.json({ ok: true, connections });
+  return NextResponse.json({ ok: true, connections: publicConnections(connections) });
 }

@@ -1,4 +1,7 @@
+import Link from "next/link";
+import { ArrowUpRight, ArrowRight, MessageSquare } from "lucide-react";
 import PageHead from "../PageHead";
+import { CONTACT_URL } from "@/lib/site";
 
 export const metadata = { title: "SEO · New Riyadh Media" };
 
@@ -19,25 +22,27 @@ export default function SeoPage() {
             <span className="seo-hero__chip">WP</span>
             <span className="seo-hero__chip seo-hero__chip--g">G</span>
           </div>
-          <span className="seo-hero__arrow">↗</span>
+          <span className="seo-hero__arrow"><ArrowUpRight size={20} /></span>
         </div>
         <div className="seo-hero__copy">
           <h2>Let us grow your blog traffic for you</h2>
           <p>Choose a topic and the AI automatically writes and publishes a set of related posts. Together they signal to Google that your site is an authority — and your rankings climb.</p>
-          <button className="btn">Set Up My SEO Plan</button>
+          <Link href="/dashboard/assistant" className="btn">Generate blog posts</Link>
         </div>
       </section>
 
       <div className="expert-banner expert-banner--seo">
-        <div className="expert-banner__avatar">
-          {/* eslint-disable-next-line @next/next/no-img-element */}
-          <img src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=160&q=70&auto=format&fit=crop" alt="" />
+        <div className="expert-banner__icon" aria-hidden="true">
+          <MessageSquare size={20} strokeWidth={1.75} />
         </div>
-        <div className="expert-banner__text">
-          <strong>Get free expert SEO and AEO advice</strong>
-          <span>A specialist reviews your SEO and AEO strategy and shows you where to start.</span>
+        <div className="expert-banner__body">
+          <span className="expert-banner__eyebrow">Free · 1:1 review</span>
+          <strong className="expert-banner__title">Get free expert SEO and AEO advice</strong>
+          <p className="expert-banner__desc">A specialist reviews your SEO and AEO strategy and shows you where to start.</p>
         </div>
-        <button className="btn btn--ghost btn--sm">Talk to an expert 1:1 →</button>
+        <a href={CONTACT_URL} target="_blank" rel="noopener" className="expert-banner__cta btn btn--sm">
+          Talk to an expert <ArrowRight size={14} />
+        </a>
       </div>
     </div>
   );

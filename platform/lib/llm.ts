@@ -22,7 +22,7 @@ export interface LlmResult<T> {
   usage?: { promptTokens: number; completionTokens: number } | null;
 }
 
-export type ModelTier = "smart" | "mini";
+export type ModelTier = "smart" | "mini" | "enhance";
 
 export interface GenerateOptions<T> {
   /** Short name for the schema (used by the provider + for logs). */
@@ -56,8 +56,11 @@ function getClient(): OpenAI | null {
 }
 
 function modelFor(tier: ModelTier): string {
-  if (tier === "mini") return process.env.OPENAI_MODEL_MINI || "gpt-4o-mini";
-  return process.env.OPENAI_MODEL_SMART || "gpt-4o";
+  if (tier === "mini") return process.env.OPENAI_MODEL_MINI || "gpt-4.1-mini";
+  if (tier === "enhance") {
+    return process.env.OPENAI_MODEL_ENHANCE || process.env.OPENAI_MODEL_SMART || "gpt-4.1";
+  }
+  return process.env.OPENAI_MODEL_SMART || "gpt-4.1";
 }
 
 export function isLiveAi(): boolean {

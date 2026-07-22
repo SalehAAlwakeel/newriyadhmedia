@@ -26,20 +26,26 @@ export async function POST(req: Request) {
     return NextResponse.json({ error: "An account with that email already exists." }, { status: 409 });
   }
 
-  const user = await createUser({
-    id: crypto.randomUUID(),
-    email,
-    name,
-    company,
-    passwordHash: hashPassword(password),
-    subscribed: false,
-    plan: null,
-    createdAt: new Date().toISOString(),
-    connections: [],
-    brandKit: null,
-    contentPrefs: null,
-  });
+  try {
+    const user = await createUser({
+      id: crypto.randomUUID(),
+      email,
+      name,
+      company,
+      passwordHash: hashPassword(password),
+      subscribed: false,
+      plan: null,
+      createdAt: new Date().toISOString(),
+      credits: 0,
+      connections: [],
+      brandKit: null,
+      contentPrefs: null,
+    });
 
-  await setSessionCookie(user.id);
-  return NextResponse.json({ ok: true, subscribed: false });
+    await setSessionCookie(user.id);
+    return NextResponse.json({ ok: true, subscribed: false });
+  } catch (err) {
+    console.error("[/api/auth/signup]", err);
+    return NextResponse.json({ error: "Could not create your account. Please try again." }, { status: 500 });
+  }
 }

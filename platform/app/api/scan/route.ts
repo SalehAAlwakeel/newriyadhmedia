@@ -3,6 +3,7 @@ import { z } from "zod";
 import { scrapeSite, normalizeUrl, ScrapeError, type ScrapedSite } from "@/lib/scrape";
 import { analyzeBusiness } from "@/lib/aiSteps";
 import { checkLimits, clientIp, cacheGet, cacheSet } from "@/lib/ratelimit";
+import { logStep } from "@/lib/apiHelpers";
 
 export const runtime = "nodejs";
 export const maxDuration = 30;
@@ -68,10 +69,7 @@ export async function POST(req: Request) {
 
   await cacheSet(domain, JSON.stringify(payload));
 
-  console.log(
-    `[scan] ${domain} source=${result.source} ${Date.now() - started}ms` +
-      (result.usage ? ` tokens=${result.usage.promptTokens}+${result.usage.completionTokens}` : "")
-  );
+  logStep(`scan ${domain}`, result.source, Date.now() - started, result.usage);
 
   return NextResponse.json(payload);
 }

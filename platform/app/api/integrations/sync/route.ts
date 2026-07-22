@@ -4,15 +4,13 @@ import crypto from "crypto";
 import { getCurrentUser } from "@/lib/auth";
 import { addAiMemory, updateUser } from "@/lib/db";
 import { PLATFORMS } from "@/lib/platforms";
+import { isVerifiedConnection, publicConnection } from "@/lib/social";
+import { syncInstagramMetrics } from "@/lib/instagram";
 
 export const runtime = "nodejs";
 
 const Body = z.object({ platform: z.string().min(1) });
 
-// Pull fresh analytics from the connected account. Without a real provider
-// app this simulates a sync — bumps the followers count by a small,
-// stable amount and writes the result as an AI-memory entry so the
-// strategist can reference the latest numbers.
 export async function POST(req: Request) {
   const user = await getCurrentUser();
   if (!user) return NextResponse.json({ error: "Not signed in." }, { status: 401 });
@@ -24,28 +22,39 @@ export async function POST(req: Request) {
   if (!def) return NextResponse.json({ error: "Unknown platform." }, { status: 400 });
 
   const conn = user.connections.find((c) => c.platform === def.id);
-  if (!conn) return NextResponse.json({ error: "Account not connected." }, { status: 400 });
+  if (!conn || !isVerifiedConnection(conn)) {
+    return NextResponse.json({ error: "Account not connected." }, { status: 400 });
+  }
 
-  const previous = conn.audienceSize ?? 0;
-  const delta = Math.floor(previous * 0.012) + Math.floor(Math.random() * 40);
-  const audienceSize = previous + delta;
   const now = new Date().toISOString();
+  let patch: Record<string, unknown> = { lastSyncedAt: now };
 
-  const connections = user.connections.map((c) =>
-    c.platform === def.id ? { ...c, audienceSize, lastSyncedAt: now } : c,
-  );
+  if (def.id === "instagram") {
+    try {
+      patch = { ...(await syncInstagramMetrics(conn)), lastSyncedAt: now };
+    } catch (e) {
+      return NextResponse.json(
+        { error: e instanceof Error ? e.message : "Could not sync Instagram." },
+        { status: 502 },
+      );
+    }
+  } else {
+    return NextResponse.json({ error: `${def.name} sync is not available yet.` }, { status: 400 });
+  }
 
+  const connections = user.connections.map((c) => (c.platform === def.id ? { ...c, ...patch } : c));
   await updateUser(user.id, { connections });
+
+  const updated = connections.find((c) => c.platform === def.id);
+  const audienceSize = typeof patch.audienceSize === "number" ? patch.audienceSize : conn.audienceSize ?? 0;
 
   await addAiMemory(user.id, {
     id: crypto.randomUUID(),
     kind: "learning",
-    text: previous
-      ? `${def.name} (${conn.handle}) audience is now ${audienceSize.toLocaleString()} (+${delta.toLocaleString()} since last sync).`
-      : `${def.name} (${conn.handle}) baseline audience: ${audienceSize.toLocaleString()}.`,
+    text: `${def.name} (${updated?.handle ?? conn.handle}) audience is now ${audienceSize.toLocaleString()}.`,
     source: "analytics",
     createdAt: now,
   });
 
-  return NextResponse.json({ ok: true, connection: connections.find((c) => c.platform === def.id) });
+  return NextResponse.json({ ok: true, connection: updated ? publicConnection(updated) : undefined });
 }

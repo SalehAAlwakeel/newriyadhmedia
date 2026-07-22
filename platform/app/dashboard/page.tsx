@@ -1,8 +1,9 @@
 import Link from "next/link";
+import { Sparkles, Check, Megaphone, CalendarDays, LayoutGrid, Lightbulb, ArrowRight, MessageSquare } from "lucide-react";
 import { getCurrentUser } from "@/lib/auth";
+import { sanitizeConnections } from "@/lib/social";
 import { listPosts, type GeneratedPost, type PostType } from "@/lib/db";
 import NewPostButton from "./NewPostButton";
-import GenerateButton from "./GenerateButton";
 
 const PILL_CLS: Record<PostType, string> = {
   "Still Image": "rose",
@@ -38,11 +39,11 @@ function groupByCampaign(posts: GeneratedPost[]): { name: string; range: string;
 export default async function HomePage() {
   const user = await getCurrentUser();
   const first = user?.name.split(" ")[0] ?? "there";
-  const connected = (user?.connections ?? []).length > 0;
+  const connected = sanitizeConnections(user?.connections ?? []).length > 0;
   const allPosts = user ? await listPosts(user.id) : [];
 
   const upcoming = allPosts
-    .filter((p) => p.status !== "rejected" && p.status !== "failed")
+    .filter((p) => p.status === "approved" || p.status === "published")
     .sort((a, b) => +new Date(a.scheduledFor) - +new Date(b.scheduledFor))
     .slice(0, 3);
 
@@ -57,11 +58,11 @@ export default async function HomePage() {
           <div>
             <h2>Let&rsquo;s generate this week&rsquo;s content for {user?.company || "your business"}.</h2>
             <p>
-              I&rsquo;ll use your brand kit, voice and content preferences to create captions and images, then drop
-              them on the calendar. You review before anything posts.
+              Create this week&apos;s content, preview every draft, and choose when each post goes live.
+              Approved posts flow onto your calendar automatically.
             </p>
             <div className="empty-hero__cta">
-              <GenerateButton label="✦ Generate this week" />
+              <Link href="/dashboard/assistant" className="btn"><Sparkles size={16} /> Open content studio</Link>
               <Link href="/dashboard/brand-kit" className="btn btn--ghost">Tune brand first</Link>
             </div>
           </div>
@@ -72,12 +73,12 @@ export default async function HomePage() {
         <h2 className="home__h">Up next</h2>
         {connected ? (
           <Link href="/dashboard/calendar" className="up-next">
-            <span className="up-next__icon up-next__icon--ok">✓</span>
+            <span className="up-next__icon up-next__icon--ok"><Check size={20} /></span>
             <div><strong>You&rsquo;re all set</strong><span>Approved content will publish automatically on schedule.</span></div>
           </Link>
         ) : (
           <Link href="/dashboard/integrations" className="up-next">
-            <span className="up-next__icon">📣</span>
+            <span className="up-next__icon"><Megaphone size={20} /></span>
             <div><strong>Connect your accounts</strong><span>Your posts are idle. Automatically publish your approved content.</span></div>
           </Link>
         )}
@@ -87,14 +88,14 @@ export default async function HomePage() {
         <div className="home__sechead">
           <h2 className="home__h">Upcoming posts</h2>
           <div className="home__sechead-r">
-            <Link href="/dashboard/calendar" className="btn btn--ghost btn--sm">📅 See All Content</Link>
+            <Link href="/dashboard/calendar" className="btn btn--ghost btn--sm"><CalendarDays size={15} /> See All Content</Link>
             <NewPostButton className="btn btn--sm" />
           </div>
         </div>
         {upcoming.length === 0 ? (
           <div className="empty-card">
-            <p>No posts yet. Generate this week to populate the calendar.</p>
-            <GenerateButton label="✦ Generate this week" className="btn btn--sm" />
+            <p>No scheduled posts yet. Plan &amp; approve content in the AI Strategist to fill your calendar.</p>
+            <Link href="/dashboard/assistant" className="btn btn--sm"><Sparkles size={15} /> Open content studio</Link>
           </div>
         ) : (
           <div className="home-posts">
@@ -112,7 +113,7 @@ export default async function HomePage() {
                   ) : (
                     <div className="post-card__placeholder" />
                   )}
-                  <span className="home-post__badge">{p.status === "approved" ? "Approved ✓" : p.status === "ready" ? "Ready" : "Generating…"}</span>
+                  <span className="home-post__badge">{p.status === "approved" ? "Approved" : p.status === "ready" ? "Ready" : "Generating…"}</span>
                 </div>
               </article>
             ))}
@@ -123,7 +124,7 @@ export default async function HomePage() {
       <section className="home__sec">
         <div className="home__sechead">
           <h2 className="home__h">Campaigns</h2>
-          <Link href="/dashboard/campaigns" className="btn btn--ghost btn--sm">⊟ See All Campaigns</Link>
+          <Link href="/dashboard/campaigns" className="btn btn--ghost btn--sm"><LayoutGrid size={15} /> See All Campaigns</Link>
         </div>
         {campaigns.length === 0 ? (
           <div className="empty-card">
@@ -143,7 +144,7 @@ export default async function HomePage() {
                   )}
                   <div>
                     <h3 className="camp2__name">{c.name}</h3>
-                    <span className="camp2__tag">💡 Generated</span>
+                    <span className="camp2__tag"><Lightbulb size={12} /> Generated</span>
                   </div>
                 </div>
                 <span className="camp2__timing">{c.range}</span>
@@ -170,15 +171,17 @@ export default async function HomePage() {
       <section className="home__sec">
         <h2 className="home__h">Expand your reach</h2>
         <div className="expert-banner">
-          <div className="expert-banner__avatar">
-            {/* eslint-disable-next-line @next/next/no-img-element */}
-            <img src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=160&q=70&auto=format&fit=crop" alt="" />
+          <div className="expert-banner__icon" aria-hidden="true">
+            <MessageSquare size={20} strokeWidth={1.75} />
           </div>
-          <div className="expert-banner__text">
-            <strong>✦ Talk to a marketing expert</strong>
-            <span>A specialist reviews your strategy, content and publishing — free.</span>
+          <div className="expert-banner__body">
+            <span className="expert-banner__eyebrow">Free · 1:1 review</span>
+            <strong className="expert-banner__title">Talk to a marketing expert</strong>
+            <p className="expert-banner__desc">A specialist reviews your strategy, content and publishing — free.</p>
           </div>
-          <Link href="/dashboard/assistant" className="btn btn--ghost btn--sm">Get advice 1:1 →</Link>
+          <Link href="/dashboard/assistant" className="expert-banner__cta btn btn--sm">
+            Get advice <ArrowRight size={14} />
+          </Link>
         </div>
       </section>
     </div>

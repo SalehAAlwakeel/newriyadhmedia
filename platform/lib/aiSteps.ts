@@ -60,7 +60,7 @@ export async function analyzeBusiness(
     schemaName: "business_profile",
     jsonSchema: profileJsonSchema,
     validator: ProfileSchema,
-    tier: "mini",
+    tier: "smart",
     maxTokens: 400,
     system:
       `${SAUDI_MARKETING_CONTEXT}\n\nTASK: From scraped website content, extract:\n1. The exact business/brand name (as they spell it themselves)\n2. A crisp 1-2 sentence elevator pitch in the site's own primary language — what they do, who for, and what makes them different. Be concrete and value-driven, not generic.\n3. The primary human language of the site.\n\nRules: Never invent facts not supported by the content. If the site is vague, write the best pitch from what's available. Use their own terminology.`,

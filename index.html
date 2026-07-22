@@ -13,11 +13,11 @@
   <!-- Fonts: elegant serif + clean sans + a tasteful italic -->
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;0,700;1,300;1,400;1,500&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;0,700;1,300;1,400;1,500&family=IBM+Plex+Sans+Arabic:wght@300;400;500;600&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet" />
 
   <link rel="stylesheet" href="styles.css" />
 </head>
-<body>
+<body data-i18n-title="index.meta.title" data-i18n-desc="index.meta.desc">
 
   <!-- ============ LOADER ============ -->
   <div class="loader" aria-hidden="true">
@@ -34,32 +34,37 @@
     </div>
   </div>
 
-  <!-- ============ CUSTOM CURSOR ============ -->
-  <div class="cursor" aria-hidden="true">
-    <div class="cursor__dot"></div>
-    <div class="cursor__ring"></div>
-  </div>
-
   <!-- ============ NAV ============ -->
   <header class="nav" data-nav>
-    <a class="nav__brand" href="#top" aria-label="New Riyadh Media, Home">
+    <a class="nav__brand" href="#top" data-i18n-aria="nav.brand.aria">
       <img class="nav__logo-img" src="assets/logo-mark.png" alt="New Riyadh Media"/>
       <span class="nav__name">New Riyadh Media</span>
     </a>
 
-    <nav class="nav__links" aria-label="Primary">
-      <a href="#about" data-hover>About</a>
-      <a href="#services" data-hover>Services</a>
-      <a href="automated-marketing.html" data-hover>Automated Marketing</a>
-      <a href="#contact" data-hover>Contact</a>
-    </nav>
+    <div class="nav__center">
+      <nav class="nav__links" id="navLinks" aria-label="Primary">
+        <a href="#about" data-hover data-i18n="nav.about">About</a>
+        <a href="#services" data-hover data-i18n="nav.services">Services</a>
+        <a href="automated-marketing.html" data-hover data-i18n="nav.automated">Automated Marketing</a>
+        <a href="#contact" data-hover data-i18n="nav.contact">Contact</a>
+        <a href="http://localhost:3000/login" data-platform-path="/login" class="nav__links-login" data-i18n="nav.login">Client login</a>
+        <a href="#contact" class="nav__links-cta" data-hover data-i18n="nav.start">Start a project</a>
+      </nav>
+    </div>
 
-    <a href="#contact" class="nav__cta" data-hover>
-      <span>Start a project</span>
-      <svg viewBox="0 0 24 24" fill="none" aria-hidden="true">
-        <path d="M5 12h14M13 6l6 6-6 6" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
-      </svg>
-    </a>
+    <div class="nav__actions">
+      <a href="http://localhost:3000/login" data-platform-path="/login" class="nav__login" data-hover data-i18n="nav.login">Client login</a>
+      <button class="nav__lang" type="button" data-lang-toggle data-i18n-aria="nav.lang.ar">عربي</button>
+      <a href="#contact" class="nav__cta" data-hover>
+        <span data-i18n="nav.start">Start a project</span>
+        <svg viewBox="0 0 24 24" fill="none" aria-hidden="true">
+          <path d="M5 12h14M13 6l6 6-6 6" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+      </a>
+      <button class="nav__toggle" data-nav-toggle data-i18n-aria="nav.menu.open" aria-expanded="false" aria-controls="navLinks">
+        <span></span><span></span><span></span>
+      </button>
+    </div>
   </header>
 
   <main id="top">
@@ -72,60 +77,55 @@
       </video>
       <div class="hero__wash" aria-hidden="true"></div>
 
-      <!-- Editorial frame — corner brackets that turn the contained video into a curated gallery piece -->
-      <div class="hero__caption" aria-hidden="true">
-        <span>Vol. I — Riyadh MMXXVI</span>
-        <span>Reel · 01</span>
-      </div>
-      <div class="hero__frame" aria-hidden="true">
-        <span></span><span></span>
-      </div>
-
       <div class="hero__sub">
-        <p class="reveal-fade">A modern marketing studio from Riyadh, pairing senior strategists with AI-led production — full-team output.</p>
+        <p class="reveal-fade" data-i18n="index.hero.sub">A modern marketing studio from Riyadh, pairing senior strategists with AI-led production — full-team output.</p>
         <a href="#services" class="btn-ghost" data-hover>
-          <span>Our services</span>
+          <span data-i18n="index.hero.cta">Our services</span>
           <svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M12 5v14M6 13l6 6 6-6" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/></svg>
         </a>
       </div>
 
       <div class="hero__corners" aria-hidden="true">
         <span>NRM · 2026</span>
-        <span>SCROLL</span>
+        <span data-i18n="index.hero.scroll">SCROLL</span>
       </div>
     </section>
 
     <!-- ============ MARQUEE ============ -->
     <section class="marquee" aria-hidden="true">
       <div class="marquee__track">
-        <span>Branding</span><span aria-hidden="true">✦</span>
-        <span>Strategy</span><span aria-hidden="true">✦</span>
-        <span>Events</span><span aria-hidden="true">✦</span>
-        <span>Digital Marketing</span><span aria-hidden="true">✦</span>
-        <span>Photography</span><span aria-hidden="true">✦</span>
-        <span>Videography</span><span aria-hidden="true">✦</span>
-        <span>Campaigns</span><span aria-hidden="true">✦</span>
-        <span>Content</span><span aria-hidden="true">✦</span>
-        <span>Branding</span><span aria-hidden="true">✦</span>
-        <span>Strategy</span><span aria-hidden="true">✦</span>
-        <span>Events</span><span aria-hidden="true">✦</span>
-        <span>Digital Marketing</span><span aria-hidden="true">✦</span>
-        <span>Photography</span><span aria-hidden="true">✦</span>
-        <span>Videography</span><span aria-hidden="true">✦</span>
-        <span>Campaigns</span><span aria-hidden="true">✦</span>
-        <span>Content</span><span aria-hidden="true">✦</span>
+        <div class="marquee__group">
+          <span data-i18n="index.marquee.branding">Branding</span><span aria-hidden="true">✦</span>
+          <span data-i18n="index.marquee.strategy">Strategy</span><span aria-hidden="true">✦</span>
+          <span data-i18n="index.marquee.events">Events</span><span aria-hidden="true">✦</span>
+          <span data-i18n="index.marquee.digital">Digital Marketing</span><span aria-hidden="true">✦</span>
+          <span data-i18n="index.marquee.photography">Photography</span><span aria-hidden="true">✦</span>
+          <span data-i18n="index.marquee.videography">Videography</span><span aria-hidden="true">✦</span>
+          <span data-i18n="index.marquee.campaigns">Campaigns</span><span aria-hidden="true">✦</span>
+          <span data-i18n="index.marquee.content">Content</span><span aria-hidden="true">✦</span>
+        </div>
+        <div class="marquee__group" aria-hidden="true">
+          <span data-i18n="index.marquee.branding">Branding</span><span aria-hidden="true">✦</span>
+          <span data-i18n="index.marquee.strategy">Strategy</span><span aria-hidden="true">✦</span>
+          <span data-i18n="index.marquee.events">Events</span><span aria-hidden="true">✦</span>
+          <span data-i18n="index.marquee.digital">Digital Marketing</span><span aria-hidden="true">✦</span>
+          <span data-i18n="index.marquee.photography">Photography</span><span aria-hidden="true">✦</span>
+          <span data-i18n="index.marquee.videography">Videography</span><span aria-hidden="true">✦</span>
+          <span data-i18n="index.marquee.campaigns">Campaigns</span><span aria-hidden="true">✦</span>
+          <span data-i18n="index.marquee.content">Content</span><span aria-hidden="true">✦</span>
+        </div>
       </div>
     </section>
 
     <!-- ============ MADE IN SAUDI ============ -->
     <section class="origin" aria-labelledby="origin-title">
       <div class="origin__inner">
-        <span class="eyebrow reveal-fade">[ Made in the Kingdom ]</span>
+        <span class="eyebrow reveal-fade" data-i18n="index.origin.eyebrow">[ Made in the Kingdom ]</span>
         <h2 id="origin-title" class="origin__title">
-          <span class="line"><span class="word reveal">Proudly</span> <em class="word reveal">Saudi-made,</em></span>
-          <span class="line"><span class="word reveal">100%</span> <span class="word reveal">Saudi</span> <span class="word reveal">team.</span></span>
+          <span class="line"><em class="word reveal" data-i18n="index.origin.title.w1">Proudly</em> <span class="word reveal" data-i18n="index.origin.title.w2">Saudi-made,</span> <span class="word reveal" data-i18n="index.origin.title.w3">100%</span></span>
+          <span class="line"><span class="word reveal" data-i18n="index.origin.title.w4">Saudi</span> <span class="word reveal" data-i18n="index.origin.title.w5">team.</span></span>
         </h2>
-        <p class="origin__text reveal-fade">
+        <p class="origin__text reveal-fade" data-i18n="index.origin.text">
           Every strategist, designer, photographer and producer behind New Riyadh Media is Saudi. Born here, trained here, telling our stories to the world.
         </p>
       </div>
@@ -134,58 +134,58 @@
     <!-- ============ ABOUT ============ -->
     <section class="about-beliefs" id="about">
       <div class="section-head">
-        <span class="eyebrow reveal-fade">[ 01 / What we believe ]</span>
+        <span class="eyebrow reveal-fade" data-i18n="index.beliefs.eyebrow">[ 01 / What we believe ]</span>
         <h2 class="section-title">
-          <span class="line"><span class="word reveal">Four</span> <span class="word reveal">principles.</span></span>
-          <span class="line"><em class="word reveal">Every</em> <span class="word reveal">project.</span></span>
+          <span class="line"><span class="word reveal" data-i18n="index.beliefs.title.w1">Four</span> <em class="word reveal" data-i18n="index.beliefs.title.w2">principles.</em></span>
+          <span class="line"><span class="word reveal" data-i18n="index.beliefs.title.w3">Every</span> <span class="word reveal" data-i18n="index.beliefs.title.w4">project.</span> <span class="word reveal" data-i18n="index.beliefs.title.w5"></span></span>
         </h2>
       </div>
 
       <ul class="about-belief-list">
         <li class="about-belief reveal-up">
           <span class="about-belief__num">01</span>
-          <h3>Saudi-made, world-aware.</h3>
-          <p>Born here, trained here, working here. We understand the cultural codes Saudi audiences listen for — and we know how to make work that resonates beyond the Kingdom.</p>
+          <h3 data-i18n="index.belief1.title">Saudi-made, world-aware.</h3>
+          <p data-i18n="index.belief1.text">Born here, trained here, working here. We understand the cultural codes Saudi audiences listen for — and we know how to make work that resonates beyond the Kingdom.</p>
         </li>
         <li class="about-belief reveal-up">
           <span class="about-belief__num">02</span>
-          <h3>Strategy before pixels.</h3>
-          <p>A brand is a thousand decisions made the same way. We do the thinking first, so every piece of work that follows has somewhere clear to land.</p>
+          <h3 data-i18n="index.belief2.title">Strategy before pixels.</h3>
+          <p data-i18n="index.belief2.text">A brand is a thousand decisions made the same way. We do the thinking first, so every piece of work that follows has somewhere clear to land.</p>
         </li>
         <li class="about-belief reveal-up">
           <span class="about-belief__num">03</span>
-          <h3>AI accelerates. Humans decide.</h3>
-          <p>We use AI to ship more, faster. We use senior taste to make sure what ships is actually good. Tools don't replace judgement — they just give it more reach.</p>
+          <h3 data-i18n="index.belief3.title">AI accelerates. Humans decide.</h3>
+          <p data-i18n="index.belief3.text">We use AI to ship more, faster. We use senior taste to make sure what ships is actually good. Tools don't replace judgement — they just give it more reach.</p>
         </li>
         <li class="about-belief reveal-up">
           <span class="about-belief__num">04</span>
-          <h3>One team. End to end.</h3>
-          <p>Strategy, design, copy, photography, film and events live in the same room. The vision stays intact from the first sketch to the final file delivered to media.</p>
+          <h3 data-i18n="index.belief4.title">One team. End to end.</h3>
+          <p data-i18n="index.belief4.text">Strategy, design, copy, photography, film and events live in the same room. The vision stays intact from the first sketch to the final file delivered to media.</p>
         </li>
       </ul>
 
       <ul class="about-stat-list" style="margin-top: 64px;">
         <li class="about-stat reveal-up">
           <span class="about-stat__num">100<sub>%</sub></span>
-          <span class="about-stat__label">Saudi-owned &amp; led</span>
+          <span class="about-stat__label" data-i18n="index.stat1.label">Saudi-owned &amp; led</span>
         </li>
         <li class="about-stat reveal-up">
           <span class="about-stat__num">06</span>
-          <span class="about-stat__label">In-house disciplines</span>
+          <span class="about-stat__label" data-i18n="index.stat2.label">In-house disciplines</span>
         </li>
         <li class="about-stat reveal-up">
           <span class="about-stat__num">14<sub>days</sub></span>
-          <span class="about-stat__label">From brief to live</span>
+          <span class="about-stat__label" data-i18n="index.stat3.label">From brief to live</span>
         </li>
         <li class="about-stat reveal-up">
           <span class="about-stat__num">2030</span>
-          <span class="about-stat__label">The market we're built for</span>
+          <span class="about-stat__label" data-i18n="index.stat4.label">The market we're built for</span>
         </li>
       </ul>
 
       <div class="about-cta__actions reveal-fade" style="margin-top: 64px; display: flex; gap: 16px; flex-wrap: wrap;">
         <a href="about.html" class="btn-ghost" data-hover>
-          <span>Read the full story</span>
+          <span data-i18n="index.beliefs.cta">Read the full story</span>
           <svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/></svg>
         </a>
       </div>
@@ -194,57 +194,58 @@
     <!-- ============ SERVICES ============ -->
     <section class="services" id="services">
       <div class="section-head">
-        <span class="eyebrow reveal-fade">[ 02 / Services ]</span>
+        <span class="eyebrow reveal-fade" data-i18n="index.services.eyebrow">[ 02 / Services ]</span>
         <h2 class="section-title">
-          <span class="line"><span class="word reveal">What</span> <span class="word reveal">we</span> <em class="word reveal">do</em><span class="word reveal">.</span></span>
+          <span class="line"><span class="word reveal" data-i18n="index.services.title.w1">What</span> <span class="word reveal" data-i18n="index.services.title.w2">we</span> <span class="word reveal" data-i18n="index.services.title.w3">do</span> <span class="word reveal" data-i18n="index.services.title.w4">.</span></span>
+          <span class="line"><span class="word reveal" data-i18n="index.services.title.w5"></span> <span class="word reveal" data-i18n="index.services.title.w6"></span> <em class="word reveal" data-i18n="index.services.title.w7"></em></span>
         </h2>
       </div>
 
       <ul class="services__list">
         <li class="service" data-hover data-service="branding" role="button" tabindex="0" aria-haspopup="dialog">
           <span class="service__num">01</span>
-          <h3 class="service__title">Branding</h3>
-          <p class="service__desc">Naming, marks, visual systems and verbal identity, built to last beyond the trend cycle.</p>
+          <h3 class="service__title" data-i18n="index.service.branding.title">Branding</h3>
+          <p class="service__desc" data-i18n="index.service.branding.desc">Naming, marks, visual systems and verbal identity, built to last beyond the trend cycle.</p>
           <span class="service__arrow" aria-hidden="true">
             <svg viewBox="0 0 24 24" fill="none"><path d="M7 17 17 7M9 7h8v8" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/></svg>
           </span>
         </li>
         <li class="service" data-hover data-service="strategy" role="button" tabindex="0" aria-haspopup="dialog">
           <span class="service__num">02</span>
-          <h3 class="service__title">Strategy &amp; Positioning</h3>
-          <p class="service__desc">Research, audience truths and brand strategy that give every creative decision a reason.</p>
+          <h3 class="service__title" data-i18n="index.service.strategy.title">Strategy &amp; Positioning</h3>
+          <p class="service__desc" data-i18n="index.service.strategy.desc">Research, audience truths and brand strategy that give every creative decision a reason.</p>
           <span class="service__arrow" aria-hidden="true">
             <svg viewBox="0 0 24 24" fill="none"><path d="M7 17 17 7M9 7h8v8" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/></svg>
           </span>
         </li>
         <li class="service" data-hover data-service="digital" role="button" tabindex="0" aria-haspopup="dialog">
           <span class="service__num">03</span>
-          <h3 class="service__title">Digital Marketing</h3>
-          <p class="service__desc">Performance, social and SEO programmes engineered to grow audiences and convert with intent.</p>
+          <h3 class="service__title" data-i18n="index.service.digital.title">Digital Marketing</h3>
+          <p class="service__desc" data-i18n="index.service.digital.desc">Performance, social and SEO programmes engineered to grow audiences and convert with intent.</p>
           <span class="service__arrow" aria-hidden="true">
             <svg viewBox="0 0 24 24" fill="none"><path d="M7 17 17 7M9 7h8v8" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/></svg>
           </span>
         </li>
         <li class="service" data-hover data-service="campaigns" role="button" tabindex="0" aria-haspopup="dialog">
           <span class="service__num">04</span>
-          <h3 class="service__title">Campaigns &amp; Content</h3>
-          <p class="service__desc">Concept-led campaigns, art direction and editorial content built for every channel and screen.</p>
+          <h3 class="service__title" data-i18n="index.service.campaigns.title">Campaigns &amp; Content</h3>
+          <p class="service__desc" data-i18n="index.service.campaigns.desc">Concept-led campaigns, art direction and editorial content built for every channel and screen.</p>
           <span class="service__arrow" aria-hidden="true">
             <svg viewBox="0 0 24 24" fill="none"><path d="M7 17 17 7M9 7h8v8" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/></svg>
           </span>
         </li>
         <li class="service" data-hover data-service="production" role="button" tabindex="0" aria-haspopup="dialog">
           <span class="service__num">05</span>
-          <h3 class="service__title">Photography &amp; Videography</h3>
-          <p class="service__desc">In-house production from stills to film. Concept, direction, capture and post in one studio.</p>
+          <h3 class="service__title" data-i18n="index.service.production.title">Photography &amp; Videography</h3>
+          <p class="service__desc" data-i18n="index.service.production.desc">In-house production from stills to film. Concept, direction, capture and post in one studio.</p>
           <span class="service__arrow" aria-hidden="true">
             <svg viewBox="0 0 24 24" fill="none"><path d="M7 17 17 7M9 7h8v8" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/></svg>
           </span>
         </li>
         <li class="service" data-hover data-service="events" role="button" tabindex="0" aria-haspopup="dialog">
           <span class="service__num">06</span>
-          <h3 class="service__title">Event Planning</h3>
-          <p class="service__desc">Launches, activations and curated experiences, from concept and creative to flawless on-the-day delivery.</p>
+          <h3 class="service__title" data-i18n="index.service.events.title">Event Planning</h3>
+          <p class="service__desc" data-i18n="index.service.events.desc">Launches, activations and curated experiences, from concept and creative to flawless on-the-day delivery.</p>
           <span class="service__arrow" aria-hidden="true">
             <svg viewBox="0 0 24 24" fill="none"><path d="M7 17 17 7M9 7h8v8" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/></svg>
           </span>
@@ -255,47 +256,47 @@
     <!-- ============ AUTOMATED MARKETING ============ -->
     <section class="am-foundation" id="automated">
       <div class="section-head">
-        <span class="eyebrow reveal-fade">[ 03 / Automated Marketing ]</span>
+        <span class="eyebrow reveal-fade" data-i18n="index.am.eyebrow">[ 03 / Automated Marketing ]</span>
         <h2 class="section-title">
-          <span class="line"><span class="word reveal">Your</span> <span class="word reveal">marketing</span> <span class="word reveal">shouldn't</span></span>
-          <span class="line"><span class="word reveal">be</span> <span class="word reveal">your</span> <em class="word reveal">full-time</em> <span class="word reveal">job.</span></span>
+          <span class="line"><span class="word reveal" data-i18n="index.am.title.w1">Your</span> <span class="word reveal" data-i18n="index.am.title.w2">marketing</span> <span class="word reveal" data-i18n="index.am.title.w3">shouldn't</span></span>
+          <span class="line"><span class="word reveal" data-i18n="index.am.title.w4">be</span> <span class="word reveal" data-i18n="index.am.title.w5">your</span> <em class="word reveal" data-i18n="index.am.title.w6">full-time</em></span>
         </h2>
       </div>
 
-      <p class="am-foundation__lede reveal-fade">
+      <p class="am-foundation__lede reveal-fade" data-i18n="index.am.lede">
         A dedicated strategist running your social, SEO, email and ads — end to end. Full-team output, without the headcount.
       </p>
 
       <ul class="am-pillars">
         <li class="am-pillar reveal-up">
           <span class="am-pillar__num">01</span>
-          <h3>Riyadh-based senior strategist on your brand</h3>
-          <p>Named, salaried. The same person on your account, every month.</p>
+          <h3 data-i18n="index.am.pillar1.title">Riyadh-based senior strategist on your brand</h3>
+          <p data-i18n="index.am.pillar1.text">Named, salaried. The same person on your account, every month.</p>
         </li>
         <li class="am-pillar reveal-up">
           <span class="am-pillar__num">02</span>
-          <h3>Human polish on every draft you publish</h3>
-          <p>AI gets it 60% there. Your strategist brings taste and judgment to the final 40%.</p>
+          <h3 data-i18n="index.am.pillar2.title">Human polish on every draft you publish</h3>
+          <p data-i18n="index.am.pillar2.text">AI gets it 60% there. Your strategist brings taste and judgment to the final 40%.</p>
         </li>
         <li class="am-pillar reveal-up">
           <span class="am-pillar__num">03</span>
-          <h3>Direct access to the person doing the work</h3>
-          <p>Reach the person doing the work. No tickets, no shared inboxes, no escalation.</p>
+          <h3 data-i18n="index.am.pillar3.title">Direct access to the person doing the work</h3>
+          <p data-i18n="index.am.pillar3.text">Reach the person doing the work. No tickets, no shared inboxes, no escalation.</p>
         </li>
         <li class="am-pillar reveal-up">
           <span class="am-pillar__num">04</span>
-          <h3>Real insights that build month over month</h3>
-          <p>Google Analytics integration. Clear signal on what's driving growth — not vanity dashboards.</p>
+          <h3 data-i18n="index.am.pillar4.title">Real insights that build month over month</h3>
+          <p data-i18n="index.am.pillar4.text">Google Analytics integration. Clear signal on what's driving growth — not vanity dashboards.</p>
         </li>
       </ul>
 
       <div class="about-cta__actions reveal-fade" style="margin-top: 64px; display: flex; gap: 16px; flex-wrap: wrap;">
-        <a href="automated-marketing.html" class="btn-solid" data-hover>
-          <span>See plans &amp; pricing</span>
+        <a href="automated-marketing.html#am-saas" class="btn-solid" data-hover>
+          <span data-i18n="index.am.cta.plans">See plans &amp; pricing</span>
           <svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
         </a>
         <a href="#contact" class="btn-ghost" data-hover>
-          <span>Book a discovery call</span>
+          <span data-i18n="index.am.cta.discovery">Book a discovery call</span>
           <svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/></svg>
         </a>
       </div>
@@ -304,60 +305,56 @@
     <!-- ============ CONTACT / CTA ============ -->
     <section class="contact" id="contact">
       <div class="contact__inner">
-        <span class="eyebrow reveal-fade">[ 04 / Let’s Talk ]</span>
+        <span class="eyebrow reveal-fade" data-i18n="index.contact.eyebrow">[ 04 / Let’s Talk ]</span>
 
         <div class="contact__layout">
           <div class="contact__col">
             <h2 class="contact__title">
-              <span class="line"><span class="word reveal">Ready</span> <span class="word reveal">to</span></span>
-              <span class="line"><em class="word reveal">grow?</em></span>
+              <span class="line"><span class="word reveal" data-i18n="index.contact.title.w1">Ready</span> <span class="word reveal" data-i18n="index.contact.title.w2">to</span></span>
+              <span class="line"><span class="word reveal" data-i18n="index.contact.title.w3">grow?</span> <em class="word reveal" data-i18n="index.contact.title.w4"></em></span>
             </h2>
 
             <a class="contact__mail" href="mailto:hello@newriyadhmedia.com" data-hover>
               <span>hello@newriyadhmedia.com</span>
               <svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/></svg>
             </a>
-            <a class="contact__mail" href="tel:+966500000000" data-hover>
-              <span>+966 50 000 0000</span>
-              <svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/></svg>
-            </a>
           </div>
 
           <form class="cform reveal-fade" id="contact-form" novalidate>
-            <span class="cform__label">[ Send us a brief ]</span>
+            <span class="cform__label" data-i18n="form.brief">[ Send us a brief ]</span>
 
             <div class="cform__row">
               <div class="cform__field">
-                <label for="cf-name">Name</label>
-                <input type="text" id="cf-name" name="name" autocomplete="name" required>
+                <label for="cf-name" data-i18n="form.name">Name</label>
+                <input type="text" id="cf-name" name="name" autocomplete="name" required data-i18n-placeholder="form.placeholder.name">
               </div>
               <div class="cform__field">
-                <label for="cf-email">Email</label>
-                <input type="email" id="cf-email" name="email" autocomplete="email" required>
+                <label for="cf-email" data-i18n="form.email">Email</label>
+                <input type="email" id="cf-email" name="email" autocomplete="email" required data-i18n-placeholder="form.placeholder.email">
               </div>
             </div>
 
             <div class="cform__field">
-              <label for="cf-company">Company <span class="cform__opt">(optional)</span></label>
-              <input type="text" id="cf-company" name="company" autocomplete="organization">
+              <label for="cf-company"><span data-i18n="form.company">Company</span> <span class="cform__opt" data-i18n="form.companyOpt">(optional)</span></label>
+              <input type="text" id="cf-company" name="company" autocomplete="organization" data-i18n-placeholder="form.placeholder.company">
             </div>
 
             <div class="cform__field">
-              <label for="cf-message">Tell us about your company</label>
-              <textarea id="cf-message" name="message" rows="3" required></textarea>
+              <label for="cf-message" data-i18n="form.message">Tell us about your company</label>
+              <textarea id="cf-message" name="message" rows="3" required data-i18n-placeholder="form.placeholder.message"></textarea>
             </div>
 
             <button type="submit" class="cform__submit" data-hover>
               <span class="cform__submit-label">
-                <span class="cform__submit-text">Send message</span>
-                <span class="cform__submit-text cform__submit-text--alt">Send message</span>
+                <span class="cform__submit-text" data-i18n="form.submit">Send message</span>
+                <span class="cform__submit-text cform__submit-text--alt" data-i18n="form.submit">Send message</span>
               </span>
               <span class="cform__submit-arrow" aria-hidden="true">
                 <svg viewBox="0 0 24 24" fill="none"><path d="M5 12h14M13 6l6 6-6 6" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>
               </span>
             </button>
 
-            <p class="cform__success" aria-live="polite">
+            <p class="cform__success" aria-live="polite" data-i18n="form.success">
               Thank you. We’ll be in touch shortly.
             </p>
           </form>
@@ -365,11 +362,11 @@
 
         <div class="contact__grid contact__grid--single">
           <div>
-            <span class="contact__label">Social</span>
+            <span class="contact__label" data-i18n="index.contact.social">Social</span>
             <p>
-              <a href="#" data-hover>Instagram</a><br/>
-              <a href="#" data-hover>Behance</a><br/>
-              <a href="#" data-hover>LinkedIn</a>
+              <a href="#" data-hover data-i18n="social.instagram">Instagram</a><br/>
+              <a href="#" data-hover data-i18n="social.behance">Behance</a><br/>
+              <a href="#" data-hover data-i18n="social.linkedin">LinkedIn</a>
             </p>
           </div>
         </div>
@@ -379,8 +376,8 @@
     <!-- ============ FOOTER ============ -->
     <footer class="footer footer--minimal">
       <div class="footer__bottom">
-        <span>© 2026 New Riyadh Media. All rights reserved.</span>
-        <span>Crafted with care in Riyadh.</span>
+        <span data-i18n="footer.copyright">© 2026 New Riyadh Media. All rights reserved.</span>
+        <span data-i18n="footer.crafted">Crafted with care in Riyadh.</span>
       </div>
     </footer>
 
@@ -390,207 +387,207 @@
   <div class="spanel-backdrop" aria-hidden="true"></div>
 
   <!-- Branding -->
-  <article class="spanel" id="spanel-branding" role="dialog" aria-modal="true" aria-label="Branding" hidden>
+  <article class="spanel" id="spanel-branding" role="dialog" aria-modal="true" data-i18n-aria="panel.branding.aria" hidden>
     <div class="spanel__pattern" aria-hidden="true"><span class="spanel__bignum">01</span></div>
     <div class="spanel__inner">
       <header class="spanel__head">
         <span class="spanel__num">01</span>
-        <button class="spanel__close" aria-label="Close" data-hover>
+        <button class="spanel__close" data-i18n-aria="aria.close" data-hover>
           <svg viewBox="0 0 24 24" fill="none"><path d="M18 6 6 18M6 6l12 12" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"/></svg>
         </button>
       </header>
-      <h2 class="spanel__title">Branding</h2>
+      <h2 class="spanel__title" data-i18n="panel.branding.title">Branding</h2>
       <div class="spanel__body">
-        <p class="spanel__lede">Saudi brands carry a unique weight. They speak to a culture that values heritage, craft and the quiet confidence of knowing exactly who you are. We build identities that hold both — modern enough for global stages, rooted enough to mean something at home.</p>
-        <p>A brand is not a logo. It is a decision made a thousand times a day — in the words you choose, the colours you wear, the way a package feels in someone's hand. We bring every one of those decisions into alignment.</p>
+        <p class="spanel__lede" data-i18n="panel.branding.lede">Saudi brands carry a unique weight. They speak to a culture that values heritage, craft and the quiet confidence of knowing exactly who you are. We build identities that hold both — modern enough for global stages, rooted enough to mean something at home.</p>
+        <p data-i18n="panel.branding.p2">A brand is not a logo. It is a decision made a thousand times a day — in the words you choose, the colours you wear, the way a package feels in someone's hand. We bring every one of those decisions into alignment.</p>
         <div class="spanel__delivers">
-          <span class="spanel__delivers-label">What we deliver</span>
+          <span class="spanel__delivers-label" data-i18n="panel.delivers">What we deliver</span>
           <ul>
-            <li>Brand strategy &amp; naming</li>
-            <li>Logo &amp; visual identity systems</li>
-            <li>Typography &amp; colour</li>
-            <li>Brand voice &amp; messaging</li>
-            <li>Brand guidelines</li>
-            <li>Packaging &amp; print applications</li>
+            <li data-i18n="panel.branding.d1">Brand strategy &amp; naming</li>
+            <li data-i18n="panel.branding.d2">Logo &amp; visual identity systems</li>
+            <li data-i18n="panel.branding.d3">Typography &amp; colour</li>
+            <li data-i18n="panel.branding.d4">Brand voice &amp; messaging</li>
+            <li data-i18n="panel.branding.d5">Brand guidelines</li>
+            <li data-i18n="panel.branding.d6">Packaging &amp; print applications</li>
           </ul>
         </div>
       </div>
-      <a href="#contact" class="spanel__cta" data-hover>Start a branding project
+      <a href="#contact" class="spanel__cta" data-hover><span data-i18n="panel.branding.cta">Start a branding project</span>
         <svg viewBox="0 0 24 24" fill="none"><path d="M5 12h14M13 6l6 6-6 6" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/></svg>
       </a>
     </div>
   </article>
 
   <!-- Strategy & Positioning -->
-  <article class="spanel" id="spanel-strategy" role="dialog" aria-modal="true" aria-label="Strategy & Positioning" hidden>
+  <article class="spanel" id="spanel-strategy" role="dialog" aria-modal="true" data-i18n-aria="panel.strategy.aria" hidden>
     <div class="spanel__pattern" aria-hidden="true"><span class="spanel__bignum">02</span></div>
     <div class="spanel__inner">
       <header class="spanel__head">
         <span class="spanel__num">02</span>
-        <button class="spanel__close" aria-label="Close" data-hover>
+        <button class="spanel__close" data-i18n-aria="aria.close" data-hover>
           <svg viewBox="0 0 24 24" fill="none"><path d="M18 6 6 18M6 6l12 12" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"/></svg>
         </button>
       </header>
-      <h2 class="spanel__title">Strategy &amp; Positioning</h2>
+      <h2 class="spanel__title" data-i18n="panel.strategy.title">Strategy &amp; Positioning</h2>
       <div class="spanel__body">
-        <p class="spanel__lede">The Saudi market is rewriting its own story at speed. We slow down long enough to understand where your brand truly sits — who it is for, what it stands for, and why it matters in a market that has never had more ambition.</p>
-        <p>Sharp positioning before a single pixel is designed. We work through audience research, competitive mapping and cultural landscape analysis to find the space only you can own — then we build the creative platform that holds it.</p>
+        <p class="spanel__lede" data-i18n="panel.strategy.lede">The Saudi market is rewriting its own story at speed. We slow down long enough to understand where your brand truly sits — who it is for, what it stands for, and why it matters in a market that has never had more ambition.</p>
+        <p data-i18n="panel.strategy.p2">Sharp positioning before a single pixel is designed. We work through audience research, competitive mapping and cultural landscape analysis to find the space only you can own — then we build the creative platform that holds it.</p>
         <div class="spanel__delivers">
-          <span class="spanel__delivers-label">What we deliver</span>
+          <span class="spanel__delivers-label" data-i18n="panel.delivers">What we deliver</span>
           <ul>
-            <li>Audience &amp; market research</li>
-            <li>Competitive positioning</li>
-            <li>Brand architecture</li>
-            <li>Brand narrative &amp; manifesto</li>
-            <li>Go-to-market strategy</li>
-            <li>Campaign platforms</li>
+            <li data-i18n="panel.strategy.d1">Audience &amp; market research</li>
+            <li data-i18n="panel.strategy.d2">Competitive positioning</li>
+            <li data-i18n="panel.strategy.d3">Brand architecture</li>
+            <li data-i18n="panel.strategy.d4">Brand narrative &amp; manifesto</li>
+            <li data-i18n="panel.strategy.d5">Go-to-market strategy</li>
+            <li data-i18n="panel.strategy.d6">Campaign platforms</li>
           </ul>
         </div>
       </div>
-      <a href="#contact" class="spanel__cta" data-hover>Build your strategy
+      <a href="#contact" class="spanel__cta" data-hover><span data-i18n="panel.strategy.cta">Build your strategy</span>
         <svg viewBox="0 0 24 24" fill="none"><path d="M5 12h14M13 6l6 6-6 6" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/></svg>
       </a>
     </div>
   </article>
 
   <!-- Digital Marketing -->
-  <article class="spanel" id="spanel-digital" role="dialog" aria-modal="true" aria-label="Digital Marketing" hidden>
+  <article class="spanel" id="spanel-digital" role="dialog" aria-modal="true" data-i18n-aria="panel.digital.aria" hidden>
     <div class="spanel__pattern" aria-hidden="true"><span class="spanel__bignum">03</span></div>
     <div class="spanel__inner">
       <header class="spanel__head">
         <span class="spanel__num">03</span>
-        <button class="spanel__close" aria-label="Close" data-hover>
+        <button class="spanel__close" data-i18n-aria="aria.close" data-hover>
           <svg viewBox="0 0 24 24" fill="none"><path d="M18 6 6 18M6 6l12 12" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"/></svg>
         </button>
       </header>
-      <h2 class="spanel__title">Digital Marketing</h2>
+      <h2 class="spanel__title" data-i18n="panel.digital.title">Digital Marketing</h2>
       <div class="spanel__body">
-        <p class="spanel__lede">Saudi audiences are among the most digitally active in the world. We run campaigns built for that reality — performance-first, culturally fluent, timed to the moments that matter in the Kingdom: Ramadan, National Day, Founding Day, and the everyday scroll.</p>
-        <p>From paid social to search to programmatic display, we manage every lever with the same care we bring to creative. Numbers that grow your brand, not just your dashboard.</p>
+        <p class="spanel__lede" data-i18n="panel.digital.lede">Saudi audiences are among the most digitally active in the world. We run campaigns built for that reality — performance-first, culturally fluent, timed to the moments that matter in the Kingdom: Ramadan, National Day, Founding Day, and the everyday scroll.</p>
+        <p data-i18n="panel.digital.p2">From paid social to search to programmatic display, we manage every lever with the same care we bring to creative. Numbers that grow your brand, not just your dashboard.</p>
         <div class="spanel__delivers">
-          <span class="spanel__delivers-label">What we deliver</span>
+          <span class="spanel__delivers-label" data-i18n="panel.delivers">What we deliver</span>
           <ul>
-            <li>Paid social (Instagram, Snapchat, TikTok, X)</li>
-            <li>Google &amp; search campaigns</li>
-            <li>SEO &amp; content strategy</li>
-            <li>Influencer partnerships</li>
-            <li>Analytics &amp; reporting</li>
-            <li>Seasonal campaign planning</li>
+            <li data-i18n="panel.digital.d1">Paid social (Instagram, Snapchat, TikTok, X)</li>
+            <li data-i18n="panel.digital.d2">Google &amp; search campaigns</li>
+            <li data-i18n="panel.digital.d3">SEO &amp; content strategy</li>
+            <li data-i18n="panel.digital.d4">Influencer partnerships</li>
+            <li data-i18n="panel.digital.d5">Analytics &amp; reporting</li>
+            <li data-i18n="panel.digital.d6">Seasonal campaign planning</li>
           </ul>
         </div>
 
         <div class="spanel__tools">
-          <span class="spanel__delivers-label">Try our free AI tools</span>
-          <p>See it before you commit. Two AI tools tuned for the Saudi market, in Arabic or English — no sign-up. Build a positioning and 4-week campaign plan, or scan your site to find what's holding it back.</p>
+          <span class="spanel__delivers-label" data-i18n="panel.digital.tools.label">Try our free AI tools</span>
+          <p data-i18n="panel.digital.tools.text">See it before you commit. Two AI tools tuned for the Saudi market, in Arabic or English — no sign-up. Build a positioning and 4-week campaign plan, or scan your site to find what's holding it back.</p>
           <div class="spanel__tools-actions">
-            <a href="http://localhost:3100/try" class="btn-solid" target="_blank" rel="noopener" data-hover>
-              <span>AI Marketing Test</span>
+            <a href="http://localhost:3000/try" data-platform-path="/try" class="btn-solid" target="_blank" rel="noopener" data-hover>
+              <span data-i18n="panel.digital.tools.test">AI Marketing Test</span>
               <svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
             </a>
-            <a href="http://localhost:3100/diagnostics" class="btn-ghost" target="_blank" rel="noopener" data-hover>
-              <span>Website Diagnostics</span>
+            <a href="http://localhost:3000/diagnostics" data-platform-path="/diagnostics" class="btn-ghost" target="_blank" rel="noopener" data-hover>
+              <span data-i18n="panel.digital.tools.diagnostics">Website Diagnostics</span>
               <svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/></svg>
             </a>
           </div>
         </div>
       </div>
-      <a href="#contact" class="spanel__cta" data-hover>Grow your audience
+      <a href="#contact" class="spanel__cta" data-hover><span data-i18n="panel.digital.cta">Grow your audience</span>
         <svg viewBox="0 0 24 24" fill="none"><path d="M5 12h14M13 6l6 6-6 6" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/></svg>
       </a>
     </div>
   </article>
 
   <!-- Campaigns & Content -->
-  <article class="spanel" id="spanel-campaigns" role="dialog" aria-modal="true" aria-label="Campaigns & Content" hidden>
+  <article class="spanel" id="spanel-campaigns" role="dialog" aria-modal="true" data-i18n-aria="panel.campaigns.aria" hidden>
     <div class="spanel__pattern" aria-hidden="true"><span class="spanel__bignum">04</span></div>
     <div class="spanel__inner">
       <header class="spanel__head">
         <span class="spanel__num">04</span>
-        <button class="spanel__close" aria-label="Close" data-hover>
+        <button class="spanel__close" data-i18n-aria="aria.close" data-hover>
           <svg viewBox="0 0 24 24" fill="none"><path d="M18 6 6 18M6 6l12 12" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"/></svg>
         </button>
       </header>
-      <h2 class="spanel__title">Campaigns &amp; Content</h2>
+      <h2 class="spanel__title" data-i18n="panel.campaigns.title">Campaigns &amp; Content</h2>
       <div class="spanel__body">
-        <p class="spanel__lede">The best Saudi campaigns are not adaptations of Western ideas with Arabic copy dropped in. They are built from a Saudi truth — a cultural insight, a shared feeling, a moment that only lands if you were raised in it. That is where we start.</p>
-        <p>Concept, art direction, copywriting, photography, video and post-production all in-house. The vision stays intact from the first sketch to the final file delivered to media.</p>
+        <p class="spanel__lede" data-i18n="panel.campaigns.lede">The best Saudi campaigns are not adaptations of Western ideas with Arabic copy dropped in. They are built from a Saudi truth — a cultural insight, a shared feeling, a moment that only lands if you were raised in it. That is where we start.</p>
+        <p data-i18n="panel.campaigns.p2">Concept, art direction, copywriting, photography, video and post-production all in-house. The vision stays intact from the first sketch to the final file delivered to media.</p>
         <div class="spanel__delivers">
-          <span class="spanel__delivers-label">What we deliver</span>
+          <span class="spanel__delivers-label" data-i18n="panel.delivers">What we deliver</span>
           <ul>
-            <li>Campaign concepts &amp; art direction</li>
-            <li>Social content systems</li>
-            <li>Arabic &amp; English copywriting</li>
-            <li>Motion graphics &amp; reels</li>
-            <li>Editorial &amp; long-form content</li>
-            <li>Content calendars &amp; management</li>
+            <li data-i18n="panel.campaigns.d1">Campaign concepts &amp; art direction</li>
+            <li data-i18n="panel.campaigns.d2">Social content systems</li>
+            <li data-i18n="panel.campaigns.d3">Arabic &amp; English copywriting</li>
+            <li data-i18n="panel.campaigns.d4">Motion graphics &amp; reels</li>
+            <li data-i18n="panel.campaigns.d5">Editorial &amp; long-form content</li>
+            <li data-i18n="panel.campaigns.d6">Content calendars &amp; management</li>
           </ul>
         </div>
       </div>
-      <a href="#contact" class="spanel__cta" data-hover>Brief us on your campaign
+      <a href="#contact" class="spanel__cta" data-hover><span data-i18n="panel.campaigns.cta">Brief us on your campaign</span>
         <svg viewBox="0 0 24 24" fill="none"><path d="M5 12h14M13 6l6 6-6 6" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/></svg>
       </a>
     </div>
   </article>
 
   <!-- Photography & Videography -->
-  <article class="spanel" id="spanel-production" role="dialog" aria-modal="true" aria-label="Photography & Videography" hidden>
+  <article class="spanel" id="spanel-production" role="dialog" aria-modal="true" data-i18n-aria="panel.production.aria" hidden>
     <div class="spanel__pattern" aria-hidden="true"><span class="spanel__bignum">05</span></div>
     <div class="spanel__inner">
       <header class="spanel__head">
         <span class="spanel__num">05</span>
-        <button class="spanel__close" aria-label="Close" data-hover>
+        <button class="spanel__close" data-i18n-aria="aria.close" data-hover>
           <svg viewBox="0 0 24 24" fill="none"><path d="M18 6 6 18M6 6l12 12" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"/></svg>
         </button>
       </header>
-      <h2 class="spanel__title">Photography &amp; Videography</h2>
+      <h2 class="spanel__title" data-i18n="panel.production.title">Photography &amp; Videography</h2>
       <div class="spanel__body">
-        <p class="spanel__lede">Light in Riyadh is unlike anywhere else — the quality of the desert afternoon, the warmth of evening in Al Diriyah, the cool drama of KAFD glass towers at dawn. We know how to use it. In-house studio and on-location production built for brands that take their visuals seriously.</p>
-        <p>From a product still on a cream surface to a cinematic brand film shot across the Kingdom, we direct and deliver every frame with the same considered eye.</p>
+        <p class="spanel__lede" data-i18n="panel.production.lede">Light in Riyadh is unlike anywhere else — the quality of the desert afternoon, the warmth of evening in Al Diriyah, the cool drama of KAFD glass towers at dawn. We know how to use it. In-house studio and on-location production built for brands that take their visuals seriously.</p>
+        <p data-i18n="panel.production.p2">From a product still on a cream surface to a cinematic brand film shot across the Kingdom, we direct and deliver every frame with the same considered eye.</p>
         <div class="spanel__delivers">
-          <span class="spanel__delivers-label">What we deliver</span>
+          <span class="spanel__delivers-label" data-i18n="panel.delivers">What we deliver</span>
           <ul>
-            <li>Product &amp; commercial photography</li>
-            <li>Editorial &amp; lifestyle photography</li>
-            <li>Brand films &amp; campaign videos</li>
-            <li>Social-first reels &amp; shorts</li>
-            <li>Post-production &amp; colour grading</li>
-            <li>Drone &amp; aerial coverage</li>
+            <li data-i18n="panel.production.d1">Product &amp; commercial photography</li>
+            <li data-i18n="panel.production.d2">Editorial &amp; lifestyle photography</li>
+            <li data-i18n="panel.production.d3">Brand films &amp; campaign videos</li>
+            <li data-i18n="panel.production.d4">Social-first reels &amp; shorts</li>
+            <li data-i18n="panel.production.d5">Post-production &amp; colour grading</li>
+            <li data-i18n="panel.production.d6">Drone &amp; aerial coverage</li>
           </ul>
         </div>
       </div>
-      <a href="#contact" class="spanel__cta" data-hover>Book a production
+      <a href="#contact" class="spanel__cta" data-hover><span data-i18n="panel.production.cta">Book a production</span>
         <svg viewBox="0 0 24 24" fill="none"><path d="M5 12h14M13 6l6 6-6 6" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/></svg>
       </a>
     </div>
   </article>
 
   <!-- Event Planning -->
-  <article class="spanel" id="spanel-events" role="dialog" aria-modal="true" aria-label="Event Planning" hidden>
+  <article class="spanel" id="spanel-events" role="dialog" aria-modal="true" data-i18n-aria="panel.events.aria" hidden>
     <div class="spanel__pattern" aria-hidden="true"><span class="spanel__bignum">06</span></div>
     <div class="spanel__inner">
       <header class="spanel__head">
         <span class="spanel__num">06</span>
-        <button class="spanel__close" aria-label="Close" data-hover>
+        <button class="spanel__close" data-i18n-aria="aria.close" data-hover>
           <svg viewBox="0 0 24 24" fill="none"><path d="M18 6 6 18M6 6l12 12" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"/></svg>
         </button>
       </header>
-      <h2 class="spanel__title">Event Planning</h2>
+      <h2 class="spanel__title" data-i18n="panel.events.title">Event Planning</h2>
       <div class="spanel__body">
-        <p class="spanel__lede">Riyadh is one of the most exciting event cities in the world right now. From intimate brand dinners in the mud-brick corridors of Al Diriyah to large-scale activations on the KAFD waterfront — we plan, produce and deliver experiences that feel like the brand made them, not a vendor.</p>
-        <p>Creative concept to logistics, venue, catering, production and on-the-day management. A single point of contact for every detail.</p>
+        <p class="spanel__lede" data-i18n="panel.events.lede">Riyadh is one of the most exciting event cities in the world right now. From intimate brand dinners in the mud-brick corridors of Al Diriyah to large-scale activations on the KAFD waterfront — we plan, produce and deliver experiences that feel like the brand made them, not a vendor.</p>
+        <p data-i18n="panel.events.p2">Creative concept to logistics, venue, catering, production and on-the-day management. A single point of contact for every detail.</p>
         <div class="spanel__delivers">
-          <span class="spanel__delivers-label">What we deliver</span>
+          <span class="spanel__delivers-label" data-i18n="panel.delivers">What we deliver</span>
           <ul>
-            <li>Brand launches &amp; activations</li>
-            <li>Product reveals &amp; press events</li>
-            <li>Corporate &amp; executive dinners</li>
-            <li>Experiential &amp; pop-up concepts</li>
-            <li>Full production &amp; logistics</li>
-            <li>On-the-day management</li>
+            <li data-i18n="panel.events.d1">Brand launches &amp; activations</li>
+            <li data-i18n="panel.events.d2">Product reveals &amp; press events</li>
+            <li data-i18n="panel.events.d3">Corporate &amp; executive dinners</li>
+            <li data-i18n="panel.events.d4">Experiential &amp; pop-up concepts</li>
+            <li data-i18n="panel.events.d5">Full production &amp; logistics</li>
+            <li data-i18n="panel.events.d6">On-the-day management</li>
           </ul>
         </div>
       </div>
-      <a href="#contact" class="spanel__cta" data-hover>Plan your event
+      <a href="#contact" class="spanel__cta" data-hover><span data-i18n="panel.events.cta">Plan your event</span>
         <svg viewBox="0 0 24 24" fill="none"><path d="M5 12h14M13 6l6 6-6 6" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/></svg>
       </a>
     </div>

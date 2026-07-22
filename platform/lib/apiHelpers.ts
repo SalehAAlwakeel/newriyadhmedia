@@ -51,6 +51,7 @@ export async function guard<T>(req: Request, schema: z.ZodType<T>): Promise<Guar
 }
 
 export function logStep(name: string, source: string, ms: number, usage?: { promptTokens: number; completionTokens: number } | null) {
+  if (process.env.NODE_ENV === "production") return;
   console.log(
     `[${name}] source=${source} ${ms}ms` +
       (usage ? ` tokens=${usage.promptTokens}+${usage.completionTokens}` : "")

@@ -1,8 +1,10 @@
 "use client";
 
 import { useState } from "react";
+import { CalendarDays, Check } from "lucide-react";
 import { useRouter } from "next/navigation";
 import type { GeneratedPost, PostType } from "@/lib/db";
+import PostViewer from "../PostViewer";
 
 const PILL_CLS: Record<PostType, string> = {
   "Still Image": "rose",
@@ -22,6 +24,7 @@ export default function ApprovalsList({ initial }: { initial: GeneratedPost[] })
   const router = useRouter();
   const [items, setItems] = useState<GeneratedPost[]>(initial);
   const [busy, setBusy] = useState<string | null>(null);
+  const [viewing, setViewing] = useState<GeneratedPost | null>(null);
 
   async function setStatus(id: string, status: "approved" | "rejected") {
     setBusy(id);
@@ -67,14 +70,14 @@ export default function ApprovalsList({ initial }: { initial: GeneratedPost[] })
             <div className="approvals__grouphead">
               <h2>{campaignName}</h2>
               <div className="approvals__grouphead-r">
-                <span className="approvals__range">📅 {range}</span>
-                <button className="btn btn--ghost btn--sm" onClick={approveAll}>✓ Approve All</button>
+                <span className="approvals__range"><CalendarDays size={13} /> {range}</span>
+                <button className="btn btn--ghost btn--sm" onClick={approveAll}><Check size={15} /> Approve All</button>
               </div>
             </div>
 
             <div className="approval-grid">
               {sorted.map((i) => (
-                <article key={i.id} className={`appr-card appr-card--${i.status}`}>
+                <article key={i.id} className={`appr-card appr-card--${i.status} appr-card--clickable`} onClick={() => setViewing(i)} role="button" tabIndex={0}>
                   <div className="appr-card__top">
                     <span className={`post-pill post-pill--${PILL_CLS[i.type]}`}>{i.type}</span>
                     <span className="appr-card__time">{fmtWhen(i.scheduledFor)}</span>
@@ -88,11 +91,11 @@ export default function ApprovalsList({ initial }: { initial: GeneratedPost[] })
                   )}
                   <div className="appr-card__foot">
                     {i.status === "ready" && <span className="appr-card__badge">New</span>}
-                    {i.status === "approved" && <span className="appr-card__badge appr-card__badge--ok">Approved ✓</span>}
+                    {i.status === "approved" && <span className="appr-card__badge appr-card__badge--ok"><Check size={12} /> Approved</span>}
                     {i.status === "rejected" && <span className="appr-card__badge appr-card__badge--no">Rejected</span>}
                     {i.status === "generating" && <span className="appr-card__badge">Generating…</span>}
                     {(i.status === "ready" || i.status === "generating") && (
-                      <div className="appr-card__actions">
+                      <div className="appr-card__actions" onClick={(e) => e.stopPropagation()}>
                         <button className="btn btn--sm" disabled={busy === i.id} onClick={() => setStatus(i.id, "approved")}>Approve</button>
                         <button className="btn btn--ghost btn--sm" disabled={busy === i.id} onClick={() => setStatus(i.id, "rejected")}>Reject</button>
                       </div>
@@ -104,6 +107,17 @@ export default function ApprovalsList({ initial }: { initial: GeneratedPost[] })
           </div>
         );
       })}
+
+      {viewing && (
+        <PostViewer
+          post={viewing}
+          onClose={() => setViewing(null)}
+          onChange={(updated) => {
+            setItems((arr) => arr.map((i) => (i.id === updated.id ? updated : i)));
+            setViewing(updated);
+          }}
+        />
+      )}
     </div>
   );
 }

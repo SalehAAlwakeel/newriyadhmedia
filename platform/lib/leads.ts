@@ -17,7 +17,9 @@ export interface Lead {
   createdAt: string;
 }
 
-const hasPg = Boolean(process.env.DATABASE_URL);
+// Only treat DATABASE_URL as Postgres when it actually is one — the SaaS app
+// itself runs on SQLite (file:...), which this fallback path must ignore.
+const hasPg = /^postgres(ql)?:/.test(process.env.DATABASE_URL ?? "");
 
 export async function saveLead(email: string, result: TestResult): Promise<{ ok: boolean }> {
   const lead: Lead = { email, result, createdAt: new Date().toISOString() };

@@ -4,7 +4,14 @@
 
 (() => {
   const prefersReduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-  const isCoarse = window.matchMedia('(hover: none), (pointer: coarse)').matches;
+
+  /* ---------- i18n state (used by nav + locale loader) ---------- */
+  const LOCALE_KEY = 'nrm_site_locale';
+  let siteDict = {};
+  function t(key) {
+    if (!key) return null;
+    return Object.prototype.hasOwnProperty.call(siteDict, key) ? siteDict[key] : null;
+  }
 
   /* ---------- Smooth scroll (Lenis) ---------- */
   let lenis = null;
@@ -41,41 +48,55 @@
     });
   });
 
-  /* ---------- Custom cursor ---------- */
-  const cursor = document.querySelector('.cursor');
-  const dot = document.querySelector('.cursor__dot');
-  const ring = document.querySelector('.cursor__ring');
+  /* ---------- Mobile nav (hamburger) ---------- */
+  const navEl = document.querySelector('[data-nav]');
+  const navToggle = document.querySelector('[data-nav-toggle]');
+  if (navEl && navToggle) {
+    let savedScrollY = 0;
+    const setMenu = (open) => {
+      navEl.classList.toggle('is-open', open);
+      navToggle.setAttribute('aria-expanded', open ? 'true' : 'false');
+      navToggle.setAttribute('aria-label', t(open ? 'nav.menu.close' : 'nav.menu.open') || (open ? 'Close menu' : 'Open menu'));
 
-  if (cursor && !isCoarse) {
-    let mx = window.innerWidth / 2, my = window.innerHeight / 2;
-    let dx = mx, dy = my, rx = mx, ry = my;
-
-    window.addEventListener('mousemove', (e) => {
-      mx = e.clientX; my = e.clientY;
-    });
-
-    const tick = () => {
-      dx += (mx - dx) * 0.55;
-      dy += (my - dy) * 0.55;
-      rx += (mx - rx) * 0.18;
-      ry += (my - ry) * 0.18;
-      if (dot)  dot.style.transform  = `translate3d(${dx}px, ${dy}px, 0) translate(-50%, -50%)`;
-      if (ring) ring.style.transform = `translate3d(${rx}px, ${ry}px, 0) translate(-50%, -50%)`;
-      requestAnimationFrame(tick);
+      if (open) {
+        savedScrollY = window.scrollY;
+        document.body.classList.add('menu-open');
+        document.body.style.position = 'fixed';
+        document.body.style.top = `-${savedScrollY}px`;
+        document.body.style.left = '0';
+        document.body.style.right = '0';
+        document.body.style.width = '100%';
+        if (lenis) lenis.stop();
+      } else {
+        document.body.classList.remove('menu-open');
+        document.body.style.position = '';
+        document.body.style.top = '';
+        document.body.style.left = '';
+        document.body.style.right = '';
+        document.body.style.width = '';
+        window.scrollTo(0, savedScrollY);
+        if (lenis) lenis.start();
+      }
     };
-    requestAnimationFrame(tick);
 
-    document.addEventListener('mouseenter', () => cursor.style.opacity = '1');
-    document.addEventListener('mouseleave', () => cursor.style.opacity = '0');
-
-    const hoverables = document.querySelectorAll('[data-hover], a, button, .service, .case');
-    hoverables.forEach((el) => {
-      el.addEventListener('mouseenter', () => cursor.classList.add('is-hover'));
-      el.addEventListener('mouseleave', () => cursor.classList.remove('is-hover'));
+    navToggle.addEventListener('click', () => {
+      setMenu(!navEl.classList.contains('is-open'));
     });
-  } else if (cursor) {
-    cursor.style.display = 'none';
+
+    // Close when a menu link is tapped
+    navEl.querySelectorAll('.nav__links a').forEach((a) => {
+      a.addEventListener('click', () => setMenu(false));
+    });
+
+    // Close on Escape, and clean up if resized back to desktop
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape' && navEl.classList.contains('is-open')) setMenu(false);
+    });
+    window.addEventListener('resize', () => {
+      if (window.innerWidth > 1024 && navEl.classList.contains('is-open')) setMenu(false);
+    });
   }
+
 
   /* ---------- Loader ---------- */
   const loader = document.querySelector('.loader');
@@ -85,6 +106,8 @@
   const nav = document.querySelector('.nav');
 
   const startSiteAnimations = () => {
+    const savedLocale = localStorage.getItem(LOCALE_KEY) || 'en';
+    loadLocale(savedLocale);
     if (nav) nav.classList.add('is-ready');
     runHeroIntro();
     setupScrollReveals();
@@ -195,6 +218,15 @@
       });
     });
 
+    const revealFadeIfInView = () => {
+      document.querySelectorAll('.reveal-fade:not(.is-in)').forEach((el) => {
+        const rect = el.getBoundingClientRect();
+        if (rect.top < window.innerHeight * 0.92) el.classList.add('is-in');
+      });
+    };
+    revealFadeIfInView();
+    requestAnimationFrame(revealFadeIfInView);
+
     // Slide-up elements (with subtle stagger when grouped)
     const groups = new Map();
     document.querySelectorAll('.reveal-up').forEach((el) => {
@@ -256,6 +288,7 @@
 
     // Contact title fade-up
     ScrollTrigger.refresh();
+    revealFadeIfInView();
   }
 
   /* ---------- Counters ---------- */
@@ -302,8 +335,7 @@
 
   /* ---------- Hero background video ---------- */
   function setupHeroVideo() {
-    const video = document.querySelector('.hero__video');
-    const hero  = document.querySelector('.hero');
+    const hero = document.querySelector('.hero');
 
     // Scroll-driven bottom fade — invisible at top of page, fades in as you scroll
     if (hero) {
@@ -323,43 +355,39 @@
       window.addEventListener('scroll', onScroll, { passive: true });
     }
 
-    if (!video) return;
+    const wireVideo = (video, section, washSelector) => {
+      if (!video) return;
 
-    // Pause when hero is offscreen, resume when it returns
-    if (hero && 'IntersectionObserver' in window) {
-      const io = new IntersectionObserver((entries) => {
-        entries.forEach((entry) => {
-          if (entry.isIntersecting) video.play().catch(() => {});
-          else video.pause();
-        });
-      }, { threshold: 0.05 });
-      io.observe(hero);
-    }
+      if (section && 'IntersectionObserver' in window) {
+        const io = new IntersectionObserver((entries) => {
+          entries.forEach((entry) => {
+            if (entry.isIntersecting) video.play().catch(() => {});
+            else video.pause();
+          });
+        }, { threshold: 0.05 });
+        io.observe(section);
+      }
 
-    // If the source can't load (file missing, format unsupported), remove the video
-    // so the cream hero shows through cleanly.
-    const handleError = () => {
-      video.remove();
-      const wash = document.querySelector('.hero__wash');
-      if (wash) wash.remove();
-    };
-    video.addEventListener('error', handleError);
-    video.querySelectorAll('source').forEach((s) => s.addEventListener('error', () => {
-      // Only bail when all sources have failed
-      const sources = Array.from(video.querySelectorAll('source'));
-      if (sources.every((src) => src.dataset.failed === '1' || src === s)) {
+      const handleError = () => {
+        video.remove();
+        const wash = section?.querySelector(washSelector);
+        if (wash) wash.remove();
+      };
+      video.addEventListener('error', handleError);
+      video.querySelectorAll('source').forEach((s) => s.addEventListener('error', () => {
+        const sources = Array.from(video.querySelectorAll('source'));
         s.dataset.failed = '1';
         if (sources.every((src) => src.dataset.failed === '1')) handleError();
-      } else {
-        s.dataset.failed = '1';
-      }
-    }));
+      }));
 
-    // Try to start; some browsers block autoplay until user interaction
-    const tryPlay = () => video.play().catch(() => {});
-    tryPlay();
-    document.addEventListener('click', tryPlay, { once: true, passive: true });
-    document.addEventListener('touchstart', tryPlay, { once: true, passive: true });
+      const tryPlay = () => video.play().catch(() => {});
+      tryPlay();
+      document.addEventListener('click', tryPlay, { once: true, passive: true });
+      document.addEventListener('touchstart', tryPlay, { once: true, passive: true });
+    };
+
+    wireVideo(document.querySelector('.hero__video'), hero, '.hero__wash');
+    wireVideo(document.querySelector('.am-hero__video'), document.querySelector('.am-hero'), '.am-hero__wash');
   }
 
   /* ---------- Nav scrolled state ---------- */
@@ -500,5 +528,83 @@
       }
     });
   }
+
+  /* ---------- Platform links ---------- */
+  const isLocal = ['localhost', '127.0.0.1'].includes(location.hostname);
+  if (!isLocal) {
+    const appOrigin = 'https://app.' + location.hostname.replace(/^www\./, '');
+    document.querySelectorAll('a[data-platform-path]').forEach((a) => {
+      a.href = appOrigin + a.getAttribute('data-platform-path');
+    });
+  }
+
+  /* ---------- i18n (EN / AR) ---------- */
+  function applyLocale(code) {
+    document.documentElement.lang = code;
+    document.documentElement.dir = code === 'ar' ? 'rtl' : 'ltr';
+
+    document.querySelectorAll('[data-i18n]').forEach((el) => {
+      const val = t(el.getAttribute('data-i18n'));
+      if (val == null) return;
+      if (el.hasAttribute('data-i18n-html')) el.innerHTML = val;
+      else el.textContent = val;
+    });
+
+    document.querySelectorAll('[data-i18n-placeholder]').forEach((el) => {
+      const val = t(el.getAttribute('data-i18n-placeholder'));
+      if (val != null) el.placeholder = val;
+    });
+
+    document.querySelectorAll('[data-i18n-aria]').forEach((el) => {
+      const val = t(el.getAttribute('data-i18n-aria'));
+      if (val != null) el.setAttribute('aria-label', val);
+    });
+
+    document.querySelectorAll('[data-i18n-data-label]').forEach((el) => {
+      const val = t(el.getAttribute('data-i18n-data-label'));
+      if (val != null) el.setAttribute('data-label', val);
+    });
+
+    const titleKey = document.body.getAttribute('data-i18n-title');
+    if (titleKey) {
+      const title = t(titleKey);
+      if (title) document.title = title;
+    }
+
+    const descKey = document.body.getAttribute('data-i18n-desc');
+    if (descKey) {
+      const desc = t(descKey);
+      const meta = document.querySelector('meta[name="description"]');
+      if (desc && meta) meta.setAttribute('content', desc);
+    }
+
+    document.querySelectorAll('[data-lang-toggle]').forEach((btn) => {
+      btn.textContent = code === 'ar' ? 'EN' : 'عربي';
+      btn.setAttribute('aria-label', code === 'ar' ? t('nav.lang.en') || 'Switch to English' : t('nav.lang.ar') || 'Switch to Arabic');
+    });
+
+    document.querySelectorAll('[data-nav-toggle]').forEach((btn) => {
+      const open = btn.closest('[data-nav]')?.classList.contains('is-open');
+      btn.setAttribute('aria-label', open ? (t('nav.menu.close') || 'Close menu') : (t('nav.menu.open') || 'Open menu'));
+    });
+  }
+
+  async function loadLocale(code) {
+    try {
+      const res = await fetch(`locales/${code}.json`);
+      if (!res.ok) return;
+      siteDict = await res.json();
+      applyLocale(code);
+      localStorage.setItem(LOCALE_KEY, code);
+    } catch { /* keep defaults */ }
+  }
+
+
+  document.querySelectorAll('[data-lang-toggle]').forEach((btn) => {
+    btn.addEventListener('click', () => {
+      const next = (localStorage.getItem(LOCALE_KEY) || 'en') === 'ar' ? 'en' : 'ar';
+      loadLocale(next);
+    });
+  });
 
 })();

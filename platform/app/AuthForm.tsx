@@ -31,8 +31,12 @@ export default function AuthForm({ mode }: { mode: "login" | "signup" }) {
         return;
       }
       const next = params.get("next");
+      const plan = params.get("plan");
       if (!data.subscribed) {
-        router.push("/subscribe");
+        const dest = plan && ["starter", "growth", "scale"].includes(plan)
+          ? `/subscribe?plan=${plan}`
+          : "/subscribe";
+        router.push(dest);
       } else {
         router.push(next && next.startsWith("/dashboard") ? next : "/dashboard");
       }

@@ -27,6 +27,12 @@ function extForMime(mime: string): string {
   return "png";
 }
 
+function extForVideoMime(mime: string): string {
+  if (mime.includes("webm")) return "webm";
+  if (mime.includes("quicktime") || mime.includes("mov")) return "mov";
+  return "mp4";
+}
+
 async function bytesFromSource(src: ImageSource): Promise<{ bytes: Buffer; mime: string } | null> {
   try {
     if (src.b64) {
@@ -83,4 +89,56 @@ export async function persistGeneratedImage(
     postId,
   });
   return url;
+}
+
+/**
+ * Save a generated video to disk and register it as a "video" media asset.
+ * Pass pre-downloaded bytes when the provider URL requires auth (e.g. Google Veo).
+ */
+export async function persistGeneratedVideo(
+  userId: string,
+  postId: string | undefined,
+  remoteUrl: string,
+  label?: string,
+  prefetched?: { bytes: Buffer; mime?: string },
+): Promise<string | null> {
+  try {
+    let bytes: Buffer;
+    let mime: string;
+
+    if (prefetched?.bytes) {
+      bytes = prefetched.bytes;
+      mime = prefetched.mime || "video/mp4";
+    } else {
+      const res = await fetch(remoteUrl);
+      if (!res.ok) return null;
+      mime = res.headers.get("content-type") || "video/mp4";
+      bytes = Buffer.from(await res.arrayBuffer());
+    }
+
+    const id = crypto.randomUUID();
+    const ext = extForVideoMime(mime);
+    const dir = path.join(UPLOADS_DIR, userId);
+    await fs.mkdir(dir, { recursive: true });
+    await fs.writeFile(path.join(dir, `${id}.${ext}`), bytes);
+
+    const url = `/api/media/file/${id}?type=video`;
+    await createMedia({
+      id,
+      userId,
+      filename: `${label ?? "video"}-${id}.${ext}`,
+      mime,
+      sizeBytes: bytes.byteLength,
+      kind: "video",
+      source: "generated",
+      label,
+      url,
+      uploadedAt: new Date().toISOString(),
+      postId,
+    });
+    return url;
+  } catch (err) {
+    console.error("[mediaStore] persistGeneratedVideo failed:", err);
+    return null;
+  }
 }

@@ -12,11 +12,11 @@
 
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;0,700;1,300;1,400;1,500&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;0,700;1,300;1,400;1,500&family=IBM+Plex+Sans+Arabic:wght@300;400;500;600&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet" />
 
   <link rel="stylesheet" href="styles.css" />
 </head>
-<body class="page-inner page-bg-video">
+<body class="page-inner page-bg-video" data-i18n-title="am.meta.title" data-i18n-desc="am.meta.desc">
 
   <!-- ============ LOADER ============ -->
   <div class="loader" aria-hidden="true">
@@ -33,58 +33,63 @@
     </div>
   </div>
 
-  <!-- ============ CUSTOM CURSOR ============ -->
-  <div class="cursor" aria-hidden="true">
-    <div class="cursor__dot"></div>
-    <div class="cursor__ring"></div>
-  </div>
-
   <!-- ============ NAV ============ -->
   <header class="nav" data-nav>
-    <a class="nav__brand" href="index.html" aria-label="New Riyadh Media, Home">
+    <a class="nav__brand" href="index.html" data-i18n-aria="nav.brand.aria">
       <img class="nav__logo-img" src="assets/logo-mark.png" alt="New Riyadh Media"/>
       <span class="nav__name">New Riyadh Media</span>
     </a>
 
-    <nav class="nav__links" aria-label="Primary">
-      <a href="index.html#about" data-hover>About</a>
-      <a href="index.html#services" data-hover>Services</a>
-      <a href="automated-marketing.html" data-hover aria-current="page">Automated Marketing</a>
-      <a href="index.html#contact" data-hover>Contact</a>
-    </nav>
+    <div class="nav__center">
+      <nav class="nav__links" id="navLinks" aria-label="Primary">
+        <a href="index.html#about" data-hover data-i18n="nav.about">About</a>
+        <a href="index.html#services" data-hover data-i18n="nav.services">Services</a>
+        <a href="automated-marketing.html" data-hover aria-current="page" data-i18n="nav.automated">Automated Marketing</a>
+        <a href="index.html#contact" data-hover data-i18n="nav.contact">Contact</a>
+        <a href="http://localhost:3000/login" data-platform-path="/login" class="nav__links-login" data-i18n="nav.login">Client login</a>
+        <a href="index.html#contact" class="nav__links-cta" data-hover data-i18n="nav.start">Start a project</a>
+      </nav>
+    </div>
 
-    <a href="index.html#contact" class="nav__cta" data-hover>
-      <span>Start a project</span>
-      <svg viewBox="0 0 24 24" fill="none" aria-hidden="true">
-        <path d="M5 12h14M13 6l6 6-6 6" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
-      </svg>
-    </a>
+    <div class="nav__actions">
+      <a href="http://localhost:3000/login" data-platform-path="/login" class="nav__login" data-hover data-i18n="nav.login">Client login</a>
+      <button class="nav__lang" type="button" data-lang-toggle data-i18n-aria="nav.lang.ar">عربي</button>
+      <a href="index.html#contact" class="nav__cta" data-hover>
+        <span data-i18n="nav.start">Start a project</span>
+        <svg viewBox="0 0 24 24" fill="none" aria-hidden="true">
+          <path d="M5 12h14M13 6l6 6-6 6" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+      </a>
+      <button class="nav__toggle" data-nav-toggle data-i18n-aria="nav.menu.open" aria-expanded="false" aria-controls="navLinks">
+        <span></span><span></span><span></span>
+      </button>
+    </div>
   </header>
 
   <main id="top">
 
     <!-- ============ HERO ============ -->
     <section class="am-hero">
-      <video class="am-hero__video" autoplay muted loop playsinline preload="metadata" aria-hidden="true">
+      <video class="am-hero__video" autoplay muted loop playsinline preload="metadata" poster="assets/hero-marble.png" aria-hidden="true">
         <source src="assets/am-hero.mp4" type="video/mp4"/>
       </video>
       <div class="am-hero__wash" aria-hidden="true"></div>
       <div class="am-hero__inner">
-        <span class="eyebrow reveal-fade">[ Automated Marketing ]</span>
+        <span class="eyebrow reveal-fade" data-i18n="am.hero.eyebrow">[ Automated Marketing ]</span>
         <h1 class="am-hero__title">
-          <span class="line"><span class="word reveal">Your</span> <span class="word reveal">marketing</span> <span class="word reveal">shouldn't</span></span>
-          <span class="line"><span class="word reveal">be</span> <span class="word reveal">your</span> <em class="word reveal">full-time</em> <span class="word reveal">job.</span></span>
+          <span class="line"><span class="word reveal" data-i18n="am.hero.title.w1">Your</span> <span class="word reveal" data-i18n="am.hero.title.w2">marketing</span> <span class="word reveal" data-i18n="am.hero.title.w3">shouldn't</span></span>
+          <span class="line"><span class="word reveal" data-i18n="am.hero.title.w4">be</span> <span class="word reveal" data-i18n="am.hero.title.w5">your</span> <em class="word reveal" data-i18n="am.hero.title.w6">full-time</em></span>
         </h1>
-        <p class="am-hero__sub reveal-fade">
+        <p class="am-hero__sub reveal-fade" data-i18n="am.hero.sub">
           A dedicated strategist running your social, SEO, email and ads — end to end. Full-team output, without the headcount.
         </p>
         <div class="am-hero__actions reveal-fade">
           <a href="#am-contact" class="btn-solid" data-hover>
-            <span>Book a discovery call</span>
+            <span data-i18n="am.hero.cta.discovery">Book a discovery call</span>
             <svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
           </a>
-          <a href="#am-plans" class="btn-ghost" data-hover>
-            <span>See plans</span>
+          <a href="#am-saas" class="btn-ghost" data-hover>
+            <span data-i18n="am.hero.cta.plans">See plans</span>
             <svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M12 5v14M6 13l6 6 6-6" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/></svg>
           </a>
         </div>
@@ -94,122 +99,98 @@
     <!-- ============ FOUNDATION ============ -->
     <section class="am-foundation" id="am-foundation">
       <div class="section-head">
-        <span class="eyebrow reveal-fade">[ 01 / Foundation ]</span>
+        <span class="eyebrow reveal-fade" data-i18n="am.foundation.eyebrow">[ 01 / Foundation ]</span>
         <h2 class="section-title">
-          <span class="line"><span class="word reveal">Pick</span> <span class="word reveal">your</span> <em class="word reveal">channels.</em></span>
-          <span class="line"><span class="word reveal">We</span> <span class="word reveal">handle</span> <span class="word reveal">everything</span> <span class="word reveal">else.</span></span>
+          <span class="line"><span class="word reveal" data-i18n="am.foundation.title.w1">Pick</span> <span class="word reveal" data-i18n="am.foundation.title.w2">your</span> <em class="word reveal" data-i18n="am.foundation.title.w3">channels.</em></span>
+          <span class="line"><span class="word reveal" data-i18n="am.foundation.title.w4">We</span> <span class="word reveal" data-i18n="am.foundation.title.w5">handle</span> <span class="word reveal" data-i18n="am.foundation.title.w6">everything else.</span></span>
         </h2>
       </div>
 
-      <p class="am-foundation__lede reveal-fade">
+      <p class="am-foundation__lede reveal-fade" data-i18n="am.foundation.lede">
         Every plan comes with the same foundation. Choose the channel mix that fits where you are right now.
       </p>
 
       <ul class="am-pillars">
         <li class="am-pillar reveal-up">
           <span class="am-pillar__num">01</span>
-          <h3>Riyadh-based senior strategist on your brand</h3>
-          <p>Named, salaried. The same person on your account, every month.</p>
+          <h3 data-i18n="am.pillar1.title">Riyadh-based senior strategist on your brand</h3>
+          <p data-i18n="am.pillar1.text">Named, salaried. The same person on your account, every month.</p>
         </li>
         <li class="am-pillar reveal-up">
           <span class="am-pillar__num">02</span>
-          <h3>Human polish on every draft you publish</h3>
-          <p>AI gets it 60% there. Your strategist brings taste and judgment to the final 40%.</p>
+          <h3 data-i18n="am.pillar2.title">Human polish on every draft you publish</h3>
+          <p data-i18n="am.pillar2.text">AI gets it 60% there. Your strategist brings taste and judgment to the final 40%.</p>
         </li>
         <li class="am-pillar reveal-up">
           <span class="am-pillar__num">03</span>
-          <h3>Direct access to the person doing the work</h3>
-          <p>Reach the person doing the work. No tickets, no shared inboxes, no escalation.</p>
+          <h3 data-i18n="am.pillar3.title">Direct access to the person doing the work</h3>
+          <p data-i18n="am.pillar3.text">Reach the person doing the work. No tickets, no shared inboxes, no escalation.</p>
         </li>
         <li class="am-pillar reveal-up">
           <span class="am-pillar__num">04</span>
-          <h3>Real insights that build month over month</h3>
-          <p>Google Analytics integration. Clear signal on what's driving growth — not vanity dashboards.</p>
+          <h3 data-i18n="am.pillar4.title">Real insights that build month over month</h3>
+          <p data-i18n="am.pillar4.text">Google Analytics integration. Clear signal on what's driving growth — not vanity dashboards.</p>
         </li>
       </ul>
     </section>
 
-    <!-- ============ PLANS ============ -->
-    <section class="am-plans" id="am-plans">
+    <!-- ============ PLATFORM PLANS (SaaS) ============ -->
+    <section class="am-saas" id="am-saas">
       <div class="section-head">
-        <span class="eyebrow reveal-fade">[ 02 / Plans ]</span>
+        <span class="eyebrow reveal-fade" data-i18n="saas.eyebrow">[ Platform · Self-serve ]</span>
         <h2 class="section-title">
-          <span class="line"><span class="word reveal">Three</span> <span class="word reveal">channels.</span></span>
-          <span class="line"><em class="word reveal">One</em> <span class="word reveal">simple</span> <span class="word reveal">model.</span></span>
+          <span class="line"><em class="word reveal" data-i18n="saas.title1">Start</em> <span class="word reveal" data-i18n="saas.title2">today.</span> <span class="word reveal" data-i18n="saas.title3">Pay</span> <span class="word reveal" data-i18n="saas.title4">and</span></span>
+          <span class="line"><span class="word reveal" data-i18n="saas.title5">go.</span> <span class="word reveal" data-i18n="saas.title6"></span> <span class="word reveal" data-i18n="saas.title7"></span></span>
         </h2>
       </div>
+      <p class="am-saas__lede reveal-fade" data-i18n="saas.lede">
+        Create your account, choose a plan, and access the AI marketing platform immediately. Credits cover image, video and content generation.
+      </p>
 
-      <ul class="am-plan-list">
-        <!-- Organic -->
-        <li class="am-plan reveal-up">
-          <header class="am-plan__head">
-            <span class="am-plan__tag">Organic</span>
-          </header>
-
-          <p class="am-plan__lede">Everything that costs nothing to publish. Most clients start here — a proving ground before you spend on ads.</p>
-
-          <span class="am-plan__listlabel">What you get</span>
-          <ul class="am-plan__bullets">
-            <li><strong>Up to 10 social accounts.</strong> Connected channels we post to on your behalf.</li>
-            <li><strong>Up to 40 posts / month</strong> — including video &amp; carousel formats.</li>
-            <li><strong>Up to 12 blogs / month.</strong> SEO-led, written in your brand voice.</li>
-            <li><strong>Up to 12 emails &amp; newsletters / month.</strong> Built around your calendar.</li>
-            <li><strong>Monthly check-ins.</strong> Clear actions, not status updates.</li>
-            <li><strong>One-week content planning</strong> visible to you at all times.</li>
+      <ul class="am-saas-list">
+        <li class="am-saas-card reveal-up">
+          <span class="am-saas-card__tag" data-i18n="saas.starter.tag">Starter</span>
+          <div class="am-saas-card__price"><strong>SAR 499</strong><span data-i18n="saas.price.month">/ month</span></div>
+          <p class="am-saas-card__blurb" data-i18n="saas.starter.blurb">For solo founders and small brands getting started.</p>
+          <ul class="am-saas-card__features">
+            <li data-i18n="saas.starter.f1">1 brand workspace</li>
+            <li data-i18n="saas.starter.f2">3 connected channels</li>
+            <li data-i18n="saas.starter.f3">300 credits / mo</li>
+            <li data-i18n="saas.starter.f4">AI strategist + content studio</li>
           </ul>
-
-          <a href="#am-contact" class="am-plan__cta" data-hover>
-            <span>Talk to us</span>
-            <svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          <a href="http://localhost:3000/signup?plan=starter" data-platform-path="/signup?plan=starter" class="am-saas-card__cta btn-solid" data-hover>
+            <span data-i18n="saas.cta">Get started</span>
           </a>
         </li>
 
-        <!-- Paid Ads -->
-        <li class="am-plan am-plan--feature reveal-up">
-          <span class="am-plan__ribbon">Most popular</span>
-          <header class="am-plan__head">
-            <span class="am-plan__tag">Paid Ads</span>
-          </header>
-
-          <p class="am-plan__lede">Campaign management for Google, Meta, LinkedIn or any platform you can run ads on. Add it when you're ready to pour fuel on what's already working.</p>
-
-          <span class="am-plan__listlabel">What you get</span>
-          <ul class="am-plan__bullets">
-            <li><strong>1 platform &amp; unlimited campaigns.</strong> Add platforms as you scale.</li>
-            <li><strong>10 ads / month.</strong> Concept, copy, creative and trafficking.</li>
-            <li><strong>Strategy, setup &amp; optimisation.</strong> Owned end to end by your strategist.</li>
-            <li><strong>Monthly check-ins</strong> with a clear plan for the next 30 days.</li>
-            <li><strong>Priority email support.</strong> Same person, faster turnaround.</li>
-            <li><strong>You pay platforms directly.</strong> We never touch your spend.</li>
+        <li class="am-saas-card am-saas-card--feature reveal-up">
+          <span class="am-saas-card__ribbon" data-i18n="saas.popular">Most popular</span>
+          <span class="am-saas-card__tag" data-i18n="saas.growth.tag">Growth</span>
+          <div class="am-saas-card__price"><strong>SAR 1,299</strong><span data-i18n="saas.price.month">/ month</span></div>
+          <p class="am-saas-card__blurb" data-i18n="saas.growth.blurb">For growing businesses posting across every channel.</p>
+          <ul class="am-saas-card__features">
+            <li data-i18n="saas.growth.f1">3 brand workspaces</li>
+            <li data-i18n="saas.growth.f2">Unlimited channels</li>
+            <li data-i18n="saas.growth.f3">1,200 credits / mo</li>
+            <li data-i18n="saas.growth.f4">Approvals, scheduling &amp; SEO</li>
           </ul>
-
-          <a href="#am-contact" class="am-plan__cta" data-hover>
-            <span>Talk to us</span>
-            <svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          <a href="http://localhost:3000/signup?plan=growth" data-platform-path="/signup?plan=growth" class="am-saas-card__cta btn-solid" data-hover>
+            <span data-i18n="saas.cta">Get started</span>
           </a>
         </li>
 
-        <!-- Landing Page Studio -->
-        <li class="am-plan reveal-up">
-          <header class="am-plan__head">
-            <span class="am-plan__tag">Landing Page Studio</span>
-          </header>
-
-          <p class="am-plan__lede">Landing pages built to convert. Copy, design and a mobile-first build — hosted on your domain.</p>
-
-          <span class="am-plan__listlabel">What you get</span>
-          <ul class="am-plan__bullets">
-            <li><strong>2 landing pages / month.</strong> Concept, copy and build.</li>
-            <li><strong>Conversion-led design</strong> with a mobile-first approach.</li>
-            <li><strong>Hosted on your domain</strong> — no rented Wix subdomain.</li>
-            <li><strong>Pixel &amp; form integrations</strong> to whatever stack you run.</li>
-            <li><strong>One round of revisions</strong> per page.</li>
-            <li><strong>1:1 monthly strategy call</strong> to plan the next two pages.</li>
+        <li class="am-saas-card reveal-up">
+          <span class="am-saas-card__tag" data-i18n="saas.scale.tag">Scale</span>
+          <div class="am-saas-card__price"><strong data-i18n="saas.custom">Let's talk</strong></div>
+          <p class="am-saas-card__blurb" data-i18n="saas.scale.blurb">For agencies and multi-brand operators.</p>
+          <ul class="am-saas-card__features">
+            <li data-i18n="saas.scale.f1">Unlimited workspaces</li>
+            <li data-i18n="saas.scale.f2">Team roles &amp; approvals</li>
+            <li data-i18n="saas.scale.f3">Custom credit volume</li>
+            <li data-i18n="saas.scale.f4">Dedicated strategist</li>
           </ul>
-
-          <a href="#am-contact" class="am-plan__cta" data-hover>
-            <span>Talk to us</span>
-            <svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          <a href="#am-contact" class="am-saas-card__cta btn-ghost" data-hover>
+            <span data-i18n="saas.contact">Talk to us</span>
           </a>
         </li>
       </ul>
@@ -218,32 +199,32 @@
     <!-- ============ WHY WE EXIST ============ -->
     <section class="am-why">
       <div class="section-head">
-        <span class="eyebrow reveal-fade">[ 03 / Why we exist ]</span>
+        <span class="eyebrow reveal-fade" data-i18n="am.why.eyebrow">[ 03 / Why we exist ]</span>
         <h2 class="section-title">
-          <span class="line"><span class="word reveal">Your</span> <span class="word reveal">business</span> <span class="word reveal">is</span> <em class="word reveal">growing.</em></span>
-          <span class="line"><span class="word reveal">Your</span> <span class="word reveal">marketing</span> <span class="word reveal">is</span> <span class="word reveal">falling</span> <span class="word reveal">behind.</span></span>
+          <span class="line"><span class="word reveal" data-i18n="am.why.title.w1">Your</span> <span class="word reveal" data-i18n="am.why.title.w2">business</span> <em class="word reveal" data-i18n="am.why.title.w3">is</em></span>
+          <span class="line"><span class="word reveal" data-i18n="am.why.title.w4">growing.</span> <span class="word reveal" data-i18n="am.why.title.w5">Your</span> <span class="word reveal" data-i18n="am.why.title.w6">marketing</span> <span class="word reveal" data-i18n="am.why.title.w7">is falling behind.</span></span>
         </h2>
       </div>
 
-      <p class="am-why__lede reveal-fade">
+      <p class="am-why__lede reveal-fade" data-i18n="am.why.lede">
         You didn't start this business to manage a content calendar. But here you are.
       </p>
 
       <ol class="am-why__list">
         <li class="am-why__item reveal-up">
           <span class="am-why__num">i.</span>
-          <h3>Marketing is always the first thing to drop.</h3>
-          <p>Every week something more urgent takes priority. It's not a discipline problem — it's a structural one that won't fix itself.</p>
+          <h3 data-i18n="am.why1.title">Marketing is always the first thing to drop.</h3>
+          <p data-i18n="am.why1.text">Every week something more urgent takes priority. It's not a discipline problem — it's a structural one that won't fix itself.</p>
         </li>
         <li class="am-why__item reveal-up">
           <span class="am-why__num">ii.</span>
-          <h3>Agencies take your money. You still do the thinking.</h3>
-          <p>Wrong voice, buried strategist, monthly reports with no clear action. You hired help and still ended up managing it.</p>
+          <h3 data-i18n="am.why2.title">Agencies take your money. You still do the thinking.</h3>
+          <p data-i18n="am.why2.text">Wrong voice, buried strategist, monthly reports with no clear action. You hired help and still ended up managing it.</p>
         </li>
         <li class="am-why__item reveal-up">
           <span class="am-why__num">iii.</span>
-          <h3>Self-serve tools still need a full-time driver.</h3>
-          <p>AI can generate. But someone still has to direct it, review it, and post it. That someone is still you.</p>
+          <h3 data-i18n="am.why3.title">Self-serve tools still need a full-time driver.</h3>
+          <p data-i18n="am.why3.text">AI can generate. But someone still has to direct it, review it, and post it. That someone is still you.</p>
         </li>
       </ol>
     </section>
@@ -251,32 +232,32 @@
     <!-- ============ TIMELINE ============ -->
     <section class="am-timeline">
       <div class="section-head">
-        <span class="eyebrow reveal-fade">[ 04 / Onboarding ]</span>
+        <span class="eyebrow reveal-fade" data-i18n="am.timeline.eyebrow">[ 04 / Onboarding ]</span>
         <h2 class="section-title">
-          <span class="line"><span class="word reveal">Live</span> <span class="word reveal">in</span> <em class="word reveal">two</em> <span class="word reveal">weeks.</span></span>
-          <span class="line"><span class="word reveal">Compounding</span> <span class="word reveal">every</span> <span class="word reveal">month</span> <span class="word reveal">after.</span></span>
+          <span class="line"><em class="word reveal" data-i18n="am.timeline.title.w1">Live</em> <span class="word reveal" data-i18n="am.timeline.title.w2">in</span> <span class="word reveal" data-i18n="am.timeline.title.w3">two weeks.</span></span>
+          <span class="line"><span class="word reveal" data-i18n="am.timeline.title.w4">Compounding</span> <span class="word reveal" data-i18n="am.timeline.title.w5">every</span> <span class="word reveal" data-i18n="am.timeline.title.w6">month after.</span></span>
         </h2>
       </div>
 
-      <p class="am-timeline__lede reveal-fade">
+      <p class="am-timeline__lede reveal-fade" data-i18n="am.timeline.lede">
         A clear onboarding, a fast launch, and a learning loop that gets smarter over time.
       </p>
 
       <ol class="am-timeline__list">
         <li class="am-timeline__item reveal-up">
-          <span class="am-timeline__week">Week 1</span>
-          <h3>Onboarding &amp; brand kit</h3>
-          <p>A 60-minute session captures your voice, guardrails, and growth goals. Your brand kit is locked before a single word is written.</p>
+          <span class="am-timeline__week" data-i18n="am.timeline.w1.label">Week 1</span>
+          <h3 data-i18n="am.timeline.w1.title">Onboarding &amp; brand kit</h3>
+          <p data-i18n="am.timeline.w1.text">A 60-minute session captures your voice, guardrails, and growth goals. Your brand kit is locked before a single word is written.</p>
         </li>
         <li class="am-timeline__item reveal-up">
-          <span class="am-timeline__week">Week 2</span>
-          <h3>Live across channels, posting daily</h3>
-          <p>All channels go live. Your strategist takes every AI draft from 60% to 100% before it posts.</p>
+          <span class="am-timeline__week" data-i18n="am.timeline.w2.label">Week 2</span>
+          <h3 data-i18n="am.timeline.w2.title">Live across channels, posting daily</h3>
+          <p data-i18n="am.timeline.w2.text">All channels go live. Your strategist takes every AI draft from 60% to 100% before it posts.</p>
         </li>
         <li class="am-timeline__item reveal-up">
-          <span class="am-timeline__week">Week 3</span>
-          <h3>Learning loop</h3>
-          <p>The data tells you what's working. Your strategist doubles down every month. Real signal by month three.</p>
+          <span class="am-timeline__week" data-i18n="am.timeline.w3.label">Week 3</span>
+          <h3 data-i18n="am.timeline.w3.title">Learning loop</h3>
+          <p data-i18n="am.timeline.w3.text">The data tells you what's working. Your strategist doubles down every month. Real signal by month three.</p>
         </li>
       </ol>
     </section>
@@ -284,14 +265,14 @@
     <!-- ============ COMPARISON ============ -->
     <section class="am-compare">
       <div class="section-head">
-        <span class="eyebrow reveal-fade">[ 05 / How we compare ]</span>
+        <span class="eyebrow reveal-fade" data-i18n="am.compare.eyebrow">[ 05 / How we compare ]</span>
         <h2 class="section-title">
-          <span class="line"><span class="word reveal">Burned</span> <span class="word reveal">by</span> <span class="word reveal">an</span> <em class="word reveal">agency</em></span>
-          <span class="line"><span class="word reveal">before?</span> <span class="word reveal">You're</span> <span class="word reveal">not</span> <span class="word reveal">alone.</span></span>
+          <span class="line"><span class="word reveal" data-i18n="am.compare.title.w1">Burned</span> <span class="word reveal" data-i18n="am.compare.title.w2">by</span> <em class="word reveal" data-i18n="am.compare.title.w3">an agency</em></span>
+          <span class="line"><span class="word reveal" data-i18n="am.compare.title.w4">before?</span> <span class="word reveal" data-i18n="am.compare.title.w5">You're not alone.</span></span>
         </h2>
       </div>
 
-      <p class="am-compare__lede reveal-fade">
+      <p class="am-compare__lede reveal-fade" data-i18n="am.compare.lede">
         Most of our clients came to us after an agency missed their voice, over-promised, and under-delivered.
       </p>
 
@@ -299,41 +280,41 @@
         <table class="am-compare__table">
           <thead>
             <tr>
-              <th scope="col"><span class="visually-hidden">Topic</span></th>
-              <th scope="col">Traditional Agency</th>
-              <th scope="col">New Riyadh Media · Automated</th>
+              <th scope="col"><span class="visually-hidden" data-i18n="am.compare.col.topic">Topic</span></th>
+              <th scope="col" data-i18n="am.compare.col.agency">Traditional Agency</th>
+              <th scope="col" data-i18n="am.compare.col.nrm">New Riyadh Media · Automated</th>
             </tr>
           </thead>
           <tbody>
             <tr>
-              <th scope="row">Who does the work</th>
-              <td>Junior staff or offshore contractors.</td>
-              <td>Named, salaried Riyadh-based strategist. The same person every time.</td>
+              <th scope="row" data-i18n="am.compare.row1.topic">Who does the work</th>
+              <td data-i18n="am.compare.row1.agency" data-i18n-data-label="am.compare.col.agency" data-label="Traditional Agency">Junior staff or offshore contractors.</td>
+              <td data-i18n="am.compare.row1.nrm" data-i18n-data-label="am.compare.col.nrm" data-label="New Riyadh Media · Automated">Named, salaried Riyadh-based strategist. The same person every time.</td>
             </tr>
             <tr>
-              <th scope="row">How you reach them</th>
-              <td>Shared inboxes, ticket queues, quarterly rotations.</td>
-              <td>Direct access. One person, no queue, no escalation.</td>
+              <th scope="row" data-i18n="am.compare.row2.topic">How you reach them</th>
+              <td data-i18n="am.compare.row2.agency" data-i18n-data-label="am.compare.col.agency" data-label="Traditional Agency">Shared inboxes, ticket queues, quarterly rotations.</td>
+              <td data-i18n="am.compare.row2.nrm" data-i18n-data-label="am.compare.col.nrm" data-label="New Riyadh Media · Automated">Direct access. One person, no queue, no escalation.</td>
             </tr>
             <tr>
-              <th scope="row">Content quality</th>
-              <td>Generic output, missed brand voice, templated copy.</td>
-              <td>AI drafts, human-finished with taste and judgment in your voice.</td>
+              <th scope="row" data-i18n="am.compare.row3.topic">Content quality</th>
+              <td data-i18n="am.compare.row3.agency" data-i18n-data-label="am.compare.col.agency" data-label="Traditional Agency">Generic output, missed brand voice, templated copy.</td>
+              <td data-i18n="am.compare.row3.nrm" data-i18n-data-label="am.compare.col.nrm" data-label="New Riyadh Media · Automated">AI drafts, human-finished with taste and judgment in your voice.</td>
             </tr>
             <tr>
-              <th scope="row">What you get back</th>
-              <td>Monthly decks with impressions and follower counts.</td>
-              <td>Insights tied to what drove traffic, and what to do next month.</td>
+              <th scope="row" data-i18n="am.compare.row4.topic">What you get back</th>
+              <td data-i18n="am.compare.row4.agency" data-i18n-data-label="am.compare.col.agency" data-label="Traditional Agency">Monthly decks with impressions and follower counts.</td>
+              <td data-i18n="am.compare.row4.nrm" data-i18n-data-label="am.compare.col.nrm" data-label="New Riyadh Media · Automated">Insights tied to what drove traffic, and what to do next month.</td>
             </tr>
             <tr>
-              <th scope="row">Pricing</th>
-              <td>Retainers with scope creep, upsells, hidden fees.</td>
-              <td>Flat rate, same for everyone at that tier, no surprises.</td>
+              <th scope="row" data-i18n="am.compare.row5.topic">Pricing</th>
+              <td data-i18n="am.compare.row5.agency" data-i18n-data-label="am.compare.col.agency" data-label="Traditional Agency">Retainers with scope creep, upsells, hidden fees.</td>
+              <td data-i18n="am.compare.row5.nrm" data-i18n-data-label="am.compare.col.nrm" data-label="New Riyadh Media · Automated">Flat rate, same for everyone at that tier, no surprises.</td>
             </tr>
             <tr>
-              <th scope="row">Ad spend</th>
-              <td>% of spend billing with opaque markups.</td>
-              <td>You pay platforms directly. We never touch your spend.</td>
+              <th scope="row" data-i18n="am.compare.row6.topic">Ad spend</th>
+              <td data-i18n="am.compare.row6.agency" data-i18n-data-label="am.compare.col.agency" data-label="Traditional Agency">% of spend billing with opaque markups.</td>
+              <td data-i18n="am.compare.row6.nrm" data-i18n-data-label="am.compare.col.nrm" data-label="New Riyadh Media · Automated">You pay platforms directly. We never touch your spend.</td>
             </tr>
           </tbody>
         </table>
@@ -343,67 +324,66 @@
     <!-- ============ FAQ ============ -->
     <section class="am-faq">
       <div class="section-head">
-        <span class="eyebrow reveal-fade">[ 06 / FAQ ]</span>
+        <span class="eyebrow reveal-fade" data-i18n="am.faq.eyebrow">[ 06 / FAQ ]</span>
         <h2 class="section-title">
-          <span class="line"><span class="word reveal">No</span> <em class="word reveal">surprises.</em></span>
-          <span class="line"><span class="word reveal">Everything</span> <span class="word reveal">upfront.</span></span>
+          <span class="line"><span class="word reveal" data-i18n="am.faq.title.w1">Frequently</span> <span class="word reveal" data-i18n="am.faq.title.w2">asked</span> <span class="word reveal" data-i18n="am.faq.title.w3">questions</span> <span class="word reveal" data-i18n="am.faq.title.w4"></span> <span class="word reveal" data-i18n="am.faq.title.w5"></span> <span class="word reveal" data-i18n="am.faq.title.w6"></span> <span class="word reveal" data-i18n="am.faq.title.w7"></span></span>
         </h2>
       </div>
 
       <div class="am-faq__list reveal-fade">
         <details class="am-faq__item">
           <summary>
-            <span class="am-faq__q">Why a three-month commitment?</span>
+            <span class="am-faq__q" data-i18n="am.faq.q1">Why a three-month commitment?</span>
             <span class="am-faq__icon" aria-hidden="true"></span>
           </summary>
           <div class="am-faq__a">
-            <p>Month one, we're calibrating your content. Month two, we have real signal on what's working. Month three, we're starting to find momentum. We align every commitment period to the time it actually takes to win.</p>
-            <p>For paid programmes, we ask for a minimum three-month commitment because we want to be real partners — not turn-it-on, turn-it-off contractors.</p>
-            <p>Prefer to lock in longer? Six- and twelve-month commitments are available at a discounted rate.</p>
+            <p data-i18n="am.faq.q1.a1">Month one, we're calibrating your content. Month two, we have real signal on what's working. Month three, we're starting to find momentum. We align every commitment period to the time it actually takes to win.</p>
+            <p data-i18n="am.faq.q1.a2">For paid programmes, we ask for a minimum three-month commitment because we want to be real partners — not turn-it-on, turn-it-off contractors.</p>
+            <p data-i18n="am.faq.q1.a3">Prefer to lock in longer? Six- and twelve-month commitments are available at a discounted rate.</p>
           </div>
         </details>
 
         <details class="am-faq__item">
           <summary>
-            <span class="am-faq__q">Will someone actually understand our business?</span>
+            <span class="am-faq__q" data-i18n="am.faq.q2">Will someone actually understand our business?</span>
             <span class="am-faq__icon" aria-hidden="true"></span>
           </summary>
           <div class="am-faq__a">
-            <p>Before your strategist writes a word, they run a written intake survey and a 60–90 minute onboarding session with you. They scrape your website, gather your brand assets, and ask every question needed to understand what your brand would — and wouldn't — say.</p>
-            <p>Rich context in equals rich content out. That's the whole model.</p>
+            <p data-i18n="am.faq.q2.a1">Before your strategist writes a word, they run a written intake survey and a 60–90 minute onboarding session with you. They scrape your website, gather your brand assets, and ask every question needed to understand what your brand would — and wouldn't — say.</p>
+            <p data-i18n="am.faq.q2.a2">Rich context in equals rich content out. That's the whole model.</p>
           </div>
         </details>
 
         <details class="am-faq__item">
           <summary>
-            <span class="am-faq__q">Organic vs Paid Ads — what's the difference?</span>
+            <span class="am-faq__q" data-i18n="am.faq.q3">Organic vs Paid Ads — what's the difference?</span>
             <span class="am-faq__icon" aria-hidden="true"></span>
           </summary>
           <div class="am-faq__a">
-            <p>Organic covers everything that costs nothing to publish: social media, SEO blogs, email, and Google Business Profile. Most clients start here — a proving ground before spending on ads.</p>
-            <p>Paid is campaign management for Google Search, Meta, LinkedIn or any platform you can run ads on. The biggest difference: you have to pay to reach people. Add it when you're ready to pour fuel on what's already working.</p>
+            <p data-i18n="am.faq.q3.a1">Organic covers everything that costs nothing to publish: social media, SEO blogs, email, and Google Business Profile. Most clients start here — a proving ground before spending on ads.</p>
+            <p data-i18n="am.faq.q3.a2">Paid is campaign management for Google Search, Meta, LinkedIn or any platform you can run ads on. The biggest difference: you have to pay to reach people. Add it when you're ready to pour fuel on what's already working.</p>
           </div>
         </details>
 
         <details class="am-faq__item">
           <summary>
-            <span class="am-faq__q">Doesn't Google penalise AI content?</span>
+            <span class="am-faq__q" data-i18n="am.faq.q4">Doesn't Google penalise AI content?</span>
             <span class="am-faq__icon" aria-hidden="true"></span>
           </summary>
           <div class="am-faq__a">
-            <p>No. Google's own published guidelines are explicit: they surface content that's helpful, reliable, and written for people — regardless of whether AI was involved. They don't penalise it. Same policy at Meta and TikTok.</p>
-            <p>Not one of our clients has ever been flagged. We stay on top of every platform policy update because if anything changes, it affects our entire business too.</p>
+            <p data-i18n="am.faq.q4.a1">No. Google's own published guidelines are explicit: they surface content that's helpful, reliable, and written for people — regardless of whether AI was involved. They don't penalise it. Same policy at Meta and TikTok.</p>
+            <p data-i18n="am.faq.q4.a2">Not one of our clients has ever been flagged. We stay on top of every platform policy update because if anything changes, it affects our entire business too.</p>
           </div>
         </details>
 
         <details class="am-faq__item">
           <summary>
-            <span class="am-faq__q">How do we know it's working?</span>
+            <span class="am-faq__q" data-i18n="am.faq.q5">How do we know it's working?</span>
             <span class="am-faq__icon" aria-hidden="true"></span>
           </summary>
           <div class="am-faq__a">
-            <p>The first thing you'll see is that you're showing up — consistently, across every channel where your customers spend time. Content going out every week whether you have bandwidth or not. For most clients, that's the thing they've never been able to maintain on their own.</p>
-            <p>From there, we plug into Google Analytics so you can see what's actually moving: traffic by channel, audience growth, engagement. For the bottom line — calls, form submits, new clients — we work backwards with you. If we drove twenty extra calls in a month at 5,000 SAR, that's a 250 SAR cost per lead. You decide if that math works.</p>
+            <p data-i18n="am.faq.q5.a1">The first thing you'll see is that you're showing up — consistently, across every channel where your customers spend time. Content going out every week whether you have bandwidth or not. For most clients, that's the thing they've never been able to maintain on their own.</p>
+            <p data-i18n="am.faq.q5.a2">From there, we plug into Google Analytics so you can see what's actually moving: traffic by channel, audience growth, engagement. For the bottom line — calls, form submits, new clients — we work backwards with you. If we drove twenty extra calls in a month at 5,000 SAR, that's a 250 SAR cost per lead. You decide if that math works.</p>
           </div>
         </details>
       </div>
@@ -412,19 +392,19 @@
     <!-- ============ FINAL CTA ============ -->
     <section class="am-cta" id="am-contact">
       <div class="am-cta__inner">
-        <span class="eyebrow reveal-fade">[ Get started ]</span>
+        <span class="eyebrow reveal-fade" data-i18n="am.cta.eyebrow">[ Get started ]</span>
         <h2 class="am-cta__title">
-          <span class="line"><span class="word reveal">Ready</span> <span class="word reveal">to</span> <span class="word reveal">get</span> <span class="word reveal">your</span></span>
-          <span class="line"><em class="word reveal">marketing</em> <span class="word reveal">off</span> <span class="word reveal">your</span> <span class="word reveal">plate?</span></span>
+          <span class="line"><span class="word reveal" data-i18n="am.cta.title.w1">Ready</span> <span class="word reveal" data-i18n="am.cta.title.w2">to</span> <span class="word reveal" data-i18n="am.cta.title.w3">get</span> <span class="word reveal" data-i18n="am.cta.title.w4">your</span></span>
+          <span class="line"><em class="word reveal" data-i18n="am.cta.title.w5">marketing</em> <span class="word reveal" data-i18n="am.cta.title.w6">off</span> <span class="word reveal" data-i18n="am.cta.title.w7">your plate?</span></span>
         </h2>
-        <p class="am-cta__sub reveal-fade">30 minutes. We'll find the right fit — no pitch deck, no pressure.</p>
-        <div class="am-cta__actions reveal-fade">
+        <p class="am-cta__sub" data-i18n="am.cta.sub">30 minutes. We'll find the right fit — no pitch deck, no pressure.</p>
+        <div class="am-cta__actions">
           <a href="mailto:hello@newriyadhmedia.com?subject=Automated%20Marketing%20Discovery%20Call" class="btn-solid btn-solid--lg" data-hover>
-            <span>Book your discovery call</span>
+            <span data-i18n="am.cta.discovery">Book your discovery call</span>
             <svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
           </a>
           <a href="index.html#contact" class="btn-ghost" data-hover>
-            <span>Send a brief instead</span>
+            <span data-i18n="am.cta.brief">Send a brief instead</span>
             <svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/></svg>
           </a>
         </div>
@@ -434,8 +414,8 @@
     <!-- ============ FOOTER ============ -->
     <footer class="footer footer--minimal">
       <div class="footer__bottom">
-        <span>© 2026 New Riyadh Media. All rights reserved.</span>
-        <span>Crafted with care in Riyadh.</span>
+        <span data-i18n="footer.copyright">© 2026 New Riyadh Media. All rights reserved.</span>
+        <span data-i18n="footer.crafted">Crafted with care in Riyadh.</span>
       </div>
     </footer>
 

@@ -2,6 +2,21 @@
   "plugins": {
     "databases-on-aws": {
       "enabled": true
+    },
+    "supabase": {
+      "enabled": true
+    },
+    "stripe": {
+      "enabled": true
+    },
+    "sentry": {
+      "enabled": true
+    },
+    "vercel": {
+      "enabled": true
+    },
+    "linear": {
+      "enabled": true
     }
   }
 }

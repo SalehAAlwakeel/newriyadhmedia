@@ -1,19 +1,14 @@
+import Link from "next/link";
+import { Sparkles, Zap } from "lucide-react";
 import PageHead from "../PageHead";
 import { getCurrentUser } from "@/lib/auth";
-import { listPosts, type GeneratedPost, type PostType } from "@/lib/db";
-import GenerateButton from "../GenerateButton";
+import { listPosts, type GeneratedPost } from "@/lib/db";
+import { hasPublishConnection, publishDuePosts } from "@/lib/publish";
+import { sanitizeConnections } from "@/lib/social";
+import CalendarPostCard from "./CalendarPostCard";
 
 export const dynamic = "force-dynamic";
 export const metadata = { title: "Calendar · New Riyadh Media" };
-
-const PILL_CLS: Record<PostType, string> = {
-  "Still Image": "rose",
-  Carousel: "orange",
-  "Short-form Video": "purple",
-  Story: "rose",
-  "Blog Post": "green",
-  Email: "amber",
-};
 
 function startOfWeek(d = new Date()): Date {
   const out = new Date(d);
@@ -27,10 +22,6 @@ function startOfWeek(d = new Date()): Date {
 
 function sameDay(a: Date, b: Date): boolean {
   return a.getFullYear() === b.getFullYear() && a.getMonth() === b.getMonth() && a.getDate() === b.getDate();
-}
-
-function fmtTime(iso: string): string {
-  return new Date(iso).toLocaleTimeString("en-US", { hour: "numeric", minute: "2-digit" });
 }
 
 interface DayColumn { label: string; date: string; key: string; posts: GeneratedPost[] }
@@ -69,7 +60,14 @@ function buildWeekFrom(posts: GeneratedPost[], pivot: Date): { columns: DayColum
 
 export default async function CalendarPage() {
   const user = await getCurrentUser();
-  const posts = user ? await listPosts(user.id) : [];
+  if (user && hasPublishConnection(user)) {
+    await publishDuePosts(user);
+  }
+  const connected = sanitizeConnections(user?.connections ?? []).length > 0;
+  const allPosts = user ? await listPosts(user.id) : [];
+  // Only approved/published content lives on the calendar; drafts stay in the
+  // AI Strategist review queue until approved.
+  const posts = allPosts.filter((p) => p.status === "approved" || p.status === "published");
   // Show this week if it has posts; otherwise pivot to the week containing the
   // earliest upcoming post so newly generated content is immediately visible.
   const now = new Date();
@@ -92,23 +90,25 @@ export default async function CalendarPage() {
             <span className="cal-nav__today">Today</span>
             <button className="cal-nav__btn" aria-label="Next week">›</button>
             <span className="cal-nav__range">{range}</span>
-            <GenerateButton label="✦ Generate this week" className="btn btn--sm" />
+            <Link href="/dashboard/assistant" className="btn btn--sm"><Sparkles size={15} /> Plan in studio</Link>
           </div>
         }
       />
 
-      <div className="ds-banner">
-        <span className="ds-banner__dot">⚡</span>
-        <p>
-          <strong>Your posts aren&rsquo;t going out yet.</strong> Connect your accounts to publish automatically.
-        </p>
-        <a href="/dashboard/integrations" className="btn btn--sm">Connect</a>
-      </div>
+      {!connected && (
+        <div className="ds-banner">
+          <span className="ds-banner__dot"><Zap size={15} /></span>
+          <p>
+            <strong>Your posts aren&rsquo;t going out yet.</strong> Connect Instagram to publish automatically.
+          </p>
+          <a href="/dashboard/integrations" className="btn btn--sm">Connect</a>
+        </div>
+      )}
 
       {totalThisWeek === 0 && (
         <div className="empty-card">
-          <p>Nothing scheduled for this week yet.</p>
-          <GenerateButton label="✦ Generate this week" className="btn btn--sm" />
+          <p>Nothing scheduled yet. Generate &amp; approve content in the content studio — approved posts get scheduled here automatically.</p>
+          <Link href="/dashboard/assistant" className="btn btn--sm"><Sparkles size={15} /> Open content studio</Link>
         </div>
       )}
 
@@ -121,24 +121,7 @@ export default async function CalendarPage() {
             </div>
             <div className="cal2__slots">
               {d.posts.map((p) => (
-                <article key={p.id} className="post-card">
-                  <div className="post-card__top">
-                    <span className={`post-pill post-pill--${PILL_CLS[p.type]}`}>{p.type}</span>
-                    <span className="post-card__time">{fmtTime(p.scheduledFor)}</span>
-                  </div>
-                  <div className="post-card__media">
-                    {p.imageUrls[0] ? (
-                      // eslint-disable-next-line @next/next/no-img-element
-                      <img src={p.imageUrls[0]} alt="" />
-                    ) : (
-                      <div className="post-card__placeholder" />
-                    )}
-                    {p.status === "generating" && <span className="post-card__gen">✦ Generating…</span>}
-                  </div>
-                  <div className="post-card__foot">
-                    <span className="post-card__status">{p.status === "approved" ? "Approved" : p.status === "ready" ? "Ready to publish" : p.status === "rejected" ? "Rejected" : "Generating…"}</span>
-                  </div>
-                </article>
+                <CalendarPostCard key={p.id} post={p} />
               ))}
             </div>
           </div>

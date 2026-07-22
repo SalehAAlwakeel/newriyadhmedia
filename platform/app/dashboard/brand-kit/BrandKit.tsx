@@ -1,14 +1,39 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
-import type { BrandKit as BrandKitType } from "@/lib/db";
+import type { BrandKit as BrandKitType, GeneratedLogoEntry } from "@/lib/db";
+
+const VISUAL_STYLES = [
+  { id: "saturated-film", name: "Saturated Film", preview: "https://images.unsplash.com/photo-1522202176988-66273c2fd55f?w=400&q=70&auto=format&fit=crop" },
+  { id: "clean-minimal", name: "Clean Minimal", preview: "https://images.unsplash.com/photo-1497366216548-37526070297c?w=400&q=70&auto=format&fit=crop" },
+  { id: "warm-editorial", name: "Warm Editorial", preview: "https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?w=400&q=70&auto=format&fit=crop" },
+  { id: "bold-contrast", name: "Bold Contrast", preview: "https://images.unsplash.com/photo-1557683316-973673baf926?w=400&q=70&auto=format&fit=crop" },
+  { id: "soft-pastel", name: "Soft Pastel", preview: "https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=400&q=70&auto=format&fit=crop" },
+  { id: "dark-luxury", name: "Dark Luxury", preview: "https://images.unsplash.com/photo-1614850523459-c2f4c699c52e?w=400&q=70&auto=format&fit=crop" },
+  { id: "natural-light", name: "Natural Light", preview: "https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=400&q=70&auto=format&fit=crop" },
+  { id: "vibrant-pop", name: "Vibrant Pop", preview: "https://images.unsplash.com/photo-1550684848-fac1c5b4ee8b?w=400&q=70&auto=format&fit=crop" },
+] as const;
+
+const FONT_OPTIONS = [
+  "Inter",
+  "Akzidenz-Grotesk Next",
+  "Cormorant Garamond",
+  "Helvetica Neue",
+  "Georgia",
+  "IBM Plex Sans Arabic",
+  "Playfair Display",
+  "Montserrat",
+  "Roboto",
+  "Arial",
+] as const;
 
 const EMPTY: BrandKitType = {
   primaryColor: "#15352b",
   secondaryColor: "#7cae3f",
   logoUrl: "",
   voice: "",
-  fonts: "Akzidenz-Grotesk Next",
+  fonts: "Inter",
+  visualStyle: "saturated-film",
   purpose: "",
   audience: "",
   character: "",
@@ -16,7 +41,7 @@ const EMPTY: BrandKitType = {
   emotionTraits: [],
 };
 
-const TABS = ["Media Library", "Brand Style", "Brand Voice", "Brand Profile", "Source Materials"] as const;
+const TABS = ["Media Library", "Brand Style", "Logo Maker", "Brand Voice", "Brand Profile", "Source Materials"] as const;
 type Tab = (typeof TABS)[number];
 
 const SUGGESTED_TONE = [
@@ -118,35 +143,68 @@ export default function BrandKit({ initial, company }: { initial: BrandKitType |
           <>
             <h2 className="bk__h">Brand Style</h2>
             <div className="style-grid">
-              <div className="style-card">
-                <div className="style-card__head"><strong>Logo</strong></div>
-                {kit.logoUrl ? (
-                  // eslint-disable-next-line @next/next/no-img-element
-                  <img className="style-card__logo" src={kit.logoUrl} alt="" onError={(e) => ((e.target as HTMLImageElement).style.opacity = "0.3")} />
-                ) : (
-                  <div className="style-card__logo style-card__logo--empty">{business.charAt(0)}</div>
-                )}
-                <input className="input" placeholder="Logo URL" value={kit.logoUrl} onChange={(e) => set("logoUrl", e.target.value)} />
-              </div>
+              <LogoStyleCard
+                logoUrl={kit.logoUrl}
+                business={business}
+                onLogoUrl={(url) => set("logoUrl", url)}
+              />
 
-              <div className="style-card">
+              <div className="style-card style-card--visual">
                 <div className="style-card__head"><strong>Visual Style</strong></div>
-                {/* eslint-disable-next-line @next/next/no-img-element */}
-                <img className="style-card__visual" src="https://images.unsplash.com/photo-1522202176988-66273c2fd55f?w=500&q=70&auto=format&fit=crop" alt="" />
-                <span className="style-card__tag">Selected style · <strong>Saturated Film</strong></span>
+                <div className="visual-style-grid">
+                  {VISUAL_STYLES.map((vs) => {
+                    const active = (kit.visualStyle ?? "saturated-film") === vs.id;
+                    return (
+                      <button
+                        key={vs.id}
+                        type="button"
+                        className={`visual-style-opt ${active ? "is-active" : ""}`}
+                        onClick={() => set("visualStyle", vs.id)}
+                        title={vs.name}
+                      >
+                        {/* eslint-disable-next-line @next/next/no-img-element */}
+                        <img src={vs.preview} alt="" />
+                        <span>{vs.name}</span>
+                      </button>
+                    );
+                  })}
+                </div>
               </div>
 
               <div className="style-card">
                 <div className="style-card__head"><strong>Fonts</strong></div>
-                <div className="style-card__font">{kit.fonts || "Akzidenz-Grotesk Next"}</div>
-                <input className="input" placeholder="Title + body fonts" value={kit.fonts} onChange={(e) => set("fonts", e.target.value)} />
+                <div
+                  className="style-card__font"
+                  style={{ fontFamily: kit.fonts || "Inter" }}
+                >
+                  Aa Bb Cc
+                </div>
+                <select
+                  className="input"
+                  value={kit.fonts || "Inter"}
+                  onChange={(e) => set("fonts", e.target.value)}
+                  aria-label="Brand font"
+                >
+                  {FONT_OPTIONS.map((f) => (
+                    <option key={f} value={f}>{f}</option>
+                  ))}
+                  {!((FONT_OPTIONS as readonly string[]).includes(kit.fonts)) && kit.fonts && (
+                    <option value={kit.fonts}>{kit.fonts}</option>
+                  )}
+                </select>
               </div>
 
               <div className="style-card">
                 <div className="style-card__head"><strong>Colors</strong></div>
                 <div className="color-swatches">
-                  <label className="swatch"><input type="color" value={kit.primaryColor} onChange={(e) => set("primaryColor", e.target.value)} /><span>Primary</span></label>
-                  <label className="swatch"><input type="color" value={kit.secondaryColor} onChange={(e) => set("secondaryColor", e.target.value)} /><span>Secondary</span></label>
+                  <label className="swatch">
+                    <input type="color" value={kit.primaryColor} onChange={(e) => set("primaryColor", e.target.value)} />
+                    <span>Primary</span>
+                  </label>
+                  <label className="swatch">
+                    <input type="color" value={kit.secondaryColor} onChange={(e) => set("secondaryColor", e.target.value)} />
+                    <span>Secondary</span>
+                  </label>
                 </div>
               </div>
             </div>
@@ -226,8 +284,347 @@ export default function BrandKit({ initial, company }: { initial: BrandKitType |
           </div>
         )}
 
+        {tab === "Logo Maker" && (
+          <LogoMaker
+            company={business}
+            primaryColor={kit.primaryColor}
+            secondaryColor={kit.secondaryColor}
+            currentLogoUrl={kit.logoUrl}
+            history={kit.logoHistory ?? []}
+            onAccept={(url) => set("logoUrl", url)}
+            onHistoryChange={(logoHistory) => set("logoHistory", logoHistory)}
+          />
+        )}
+
         {tab === "Source Materials" && <SourceMaterials />}
       </div>
+    </div>
+  );
+}
+
+function LogoStyleCard({
+  logoUrl,
+  business,
+  onLogoUrl,
+}: {
+  logoUrl: string;
+  business: string;
+  onLogoUrl: (url: string) => void;
+}) {
+  const [uploading, setUploading] = useState(false);
+  const inputRef = useRef<HTMLInputElement>(null);
+
+  async function uploadLogo(files: FileList | null) {
+    const file = files?.[0];
+    if (!file || !file.type.startsWith("image/")) return;
+    setUploading(true);
+    try {
+      const fd = new FormData();
+      fd.append("file", file);
+      const res = await fetch("/api/media", { method: "POST", body: fd });
+      const data = await res.json().catch(() => ({}));
+      if (res.ok && data.asset?.url) onLogoUrl(data.asset.url);
+    } finally {
+      setUploading(false);
+    }
+  }
+
+  return (
+    <div className="style-card">
+      <div className="style-card__head"><strong>Logo</strong></div>
+      <label className="logo-upload">
+        <input
+          ref={inputRef}
+          type="file"
+          accept="image/*"
+          className="logo-upload__input"
+          onChange={(e) => uploadLogo(e.target.files)}
+          disabled={uploading}
+        />
+        {logoUrl ? (
+          // eslint-disable-next-line @next/next/no-img-element
+          <img className="style-card__logo" src={logoUrl} alt="" onError={(e) => ((e.target as HTMLImageElement).style.opacity = "0.3")} />
+        ) : (
+          <div className="style-card__logo style-card__logo--empty">
+            <span className="logo-upload__glyph">{business.charAt(0)}</span>
+            <span className="logo-upload__hint">{uploading ? "Uploading…" : "Click to upload logo"}</span>
+          </div>
+        )}
+        {logoUrl && (
+          <span className="logo-upload__overlay">{uploading ? "Uploading…" : "Change logo"}</span>
+        )}
+      </label>
+      {logoUrl && (
+        <button type="button" className="btn btn--ghost btn--sm" style={{ marginTop: 8 }} onClick={() => onLogoUrl("")}>
+          Remove logo
+        </button>
+      )}
+    </div>
+  );
+}
+
+// ---------------------------------------------------------------------------
+// Logo Maker
+// ---------------------------------------------------------------------------
+
+const LOGO_STYLES = ["Minimal", "Bold", "Playful", "Luxury", "Geometric", "Hand-drawn"] as const;
+type LogoStyle = (typeof LOGO_STYLES)[number];
+
+function LogoMaker({
+  company,
+  primaryColor,
+  secondaryColor,
+  currentLogoUrl,
+  history,
+  onAccept,
+  onHistoryChange,
+}: {
+  company: string;
+  primaryColor: string;
+  secondaryColor: string;
+  currentLogoUrl: string;
+  history: GeneratedLogoEntry[];
+  onAccept: (url: string) => void;
+  onHistoryChange: (entries: GeneratedLogoEntry[]) => void;
+}) {
+  const [companyName, setCompanyName] = useState(company);
+  const [style, setStyle] = useState<LogoStyle>("Minimal");
+  const [vibe, setVibe] = useState("");
+  const [refDataUrl, setRefDataUrl] = useState<string | null>(null);
+  const [generating, setGenerating] = useState(false);
+  const [preview, setPreview] = useState<GeneratedLogoEntry | null>(history[0] ?? null);
+  const [error, setError] = useState<string | null>(null);
+
+  const colorsDesc = [primaryColor, secondaryColor].filter(Boolean).join(" and ");
+
+  async function generate() {
+    setGenerating(true);
+    setError(null);
+    try {
+      const res = await fetch("/api/logo/generate", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          companyName: companyName.trim() || company,
+          style,
+          colors: colorsDesc,
+          vibe,
+        }),
+      });
+      const data = (await res.json()) as { logo?: GeneratedLogoEntry; error?: string };
+      if (res.ok && data.logo) {
+        setPreview(data.logo);
+        onHistoryChange([data.logo, ...history.filter((h) => h.id !== data.logo!.id)].slice(0, 24));
+      } else {
+        setError(data.error ?? "Generation failed — please try again.");
+      }
+    } catch {
+      setError("Network error — please try again.");
+    } finally {
+      setGenerating(false);
+    }
+  }
+
+  function handleRefImage(files: FileList | null) {
+    if (!files || !files[0]) return;
+    const reader = new FileReader();
+    reader.onload = (e) => setRefDataUrl((e.target?.result as string) ?? null);
+    reader.readAsDataURL(files[0]);
+  }
+
+  function useLogo(entry: GeneratedLogoEntry) {
+    onAccept(entry.url);
+    setPreview(entry);
+  }
+
+  async function removeLogo(id: string) {
+    if (!confirm("Remove this logo from your history?")) return;
+    const removed = history.find((h) => h.id === id);
+    const res = await fetch(`/api/logo/generate?id=${encodeURIComponent(id)}`, { method: "DELETE" });
+    const data = await res.json().catch(() => ({}));
+    if (res.ok && Array.isArray(data.logoHistory)) {
+      onHistoryChange(data.logoHistory);
+      if (preview?.id === id) setPreview(data.logoHistory[0] ?? null);
+      if (removed && currentLogoUrl === removed.url) onAccept("");
+    }
+  }
+
+  function fmtDate(iso: string): string {
+    return new Date(iso).toLocaleDateString("en-US", { month: "short", day: "numeric", year: "numeric" });
+  }
+
+  const isActiveBrand = Boolean(preview && currentLogoUrl === preview.url);
+
+  return (
+    <div className="logo-maker">
+      <h2 className="bk__h">AI Logo Maker</h2>
+      <p className="bk__sub">
+        Describe your brand and generate logos.
+        Pick one as your active logo — it syncs to Brand Style automatically.
+      </p>
+
+      <div className="logo-maker__grid">
+        <div className="logo-maker__form voice">
+          <div className="field">
+            <label htmlFor="logo-company">Company name</label>
+            <input
+              id="logo-company"
+              className="input"
+              value={companyName}
+              onChange={(e) => setCompanyName(e.target.value)}
+              placeholder="Your company name"
+            />
+          </div>
+
+          <div className="field">
+            <label>What style?</label>
+            <div className="chips">
+              {LOGO_STYLES.map((s) => (
+                <button
+                  key={s}
+                  type="button"
+                  className={`chip ${style === s ? "is-on" : ""}`}
+                  onClick={() => setStyle(s)}
+                >
+                  {s}
+                </button>
+              ))}
+            </div>
+          </div>
+
+          <div className="field">
+            <label>Brand colors</label>
+            <div className="color-swatches">
+              <div className="swatch swatch--ro">
+                <div className="swatch__dot" style={{ background: primaryColor }} />
+                <span>Primary</span>
+              </div>
+              <div className="swatch swatch--ro">
+                <div className="swatch__dot" style={{ background: secondaryColor }} />
+                <span>Secondary</span>
+              </div>
+            </div>
+          </div>
+
+          <div className="field">
+            <label>Describe the vibe</label>
+            <textarea
+              className="input"
+              rows={2}
+              value={vibe}
+              onChange={(e) => setVibe(e.target.value)}
+              placeholder="e.g. clean modern tech, luxury heritage, playful community…"
+            />
+          </div>
+
+          <div className="field">
+            <label>Reference image <em>optional</em></label>
+            <label className="btn btn--sm" style={{ display: "inline-flex", cursor: "pointer" }}>
+              {refDataUrl ? "Change reference" : "Upload reference"}
+              <input
+                type="file"
+                accept="image/*"
+                style={{ display: "none" }}
+                onChange={(e) => handleRefImage(e.target.files)}
+              />
+            </label>
+          </div>
+
+          <div className="logo-maker__genrow">
+            <button className="btn" onClick={generate} disabled={generating}>
+              {generating ? "Generating…" : preview ? "Generate another" : "Generate logo"}
+            </button>
+            {generating && <span className="logo-maker__wait">Up to 30 seconds…</span>}
+          </div>
+
+          {error && <p className="logo-maker__error">{error}</p>}
+        </div>
+
+        <div className="logo-maker__stage">
+          <div className={`logo-preview ${generating ? "is-loading" : ""}`}>
+            <div className="logo-preview__label">Preview</div>
+            <div className="logo-preview__canvas">
+              {generating ? (
+                <div className="logo-preview__placeholder">
+                  <span className="logo-preview__spinner" aria-hidden />
+                  <span>Creating your logo…</span>
+                </div>
+              ) : preview ? (
+                // eslint-disable-next-line @next/next/no-img-element
+                <img className="logo-preview__img" src={preview.url} alt={`${preview.style} logo for ${company}`} />
+              ) : (
+                <div className="logo-preview__placeholder">
+                  <span className="logo-preview__glyph">{company.charAt(0)}</span>
+                  <span>Your logo appears here</span>
+                </div>
+              )}
+            </div>
+            {preview && !generating && (
+              <div className="logo-preview__foot">
+                <div className="logo-preview__meta">
+                  <span className="chip is-on chip--xs">{preview.style}</span>
+                  {isActiveBrand && <span className="logo-preview__active">Active brand logo</span>}
+                </div>
+                <div className="logo-preview__actions">
+                  <a href={preview.url} download={`${company}-logo.png`} className="btn btn--ghost btn--sm">
+                    Download
+                  </a>
+                  <button
+                    className="btn btn--sm"
+                    onClick={() => useLogo(preview)}
+                    disabled={isActiveBrand}
+                  >
+                    {isActiveBrand ? "✓ In use" : "Use this logo"}
+                  </button>
+                </div>
+              </div>
+            )}
+          </div>
+        </div>
+      </div>
+
+      <section className="logo-gallery">
+        <div className="logo-gallery__head">
+          <h3 className="logo-gallery__title">Your generated logos</h3>
+          <span className="logo-gallery__count">{history.length} saved</span>
+        </div>
+        {history.length === 0 ? (
+          <div className="logo-gallery__empty">
+            <p>No logos yet. Generate your first one above — every version is saved here.</p>
+          </div>
+        ) : (
+          <div className="logo-gallery__grid">
+            {history.map((entry) => {
+              const active = currentLogoUrl === entry.url;
+              const selected = preview?.id === entry.id;
+              return (
+                <article
+                  key={entry.id}
+                  className={`logo-card ${selected ? "is-selected" : ""} ${active ? "is-active" : ""}`}
+                >
+                  <button type="button" className="logo-card__thumb" onClick={() => setPreview(entry)}>
+                    {/* eslint-disable-next-line @next/next/no-img-element */}
+                    <img src={entry.url} alt="" />
+                  </button>
+                  <div className="logo-card__body">
+                    <span className="logo-card__style">{entry.style}</span>
+                    <span className="logo-card__date">{fmtDate(entry.createdAt)}</span>
+                    {active && <span className="logo-card__badge">Active</span>}
+                  </div>
+                  <div className="logo-card__actions">
+                    <button type="button" className="btn btn--ghost btn--sm" onClick={() => useLogo(entry)} disabled={active}>
+                      Use
+                    </button>
+                    <button type="button" className="logo-card__del" onClick={() => removeLogo(entry.id)} aria-label="Remove logo">
+                      ×
+                    </button>
+                  </div>
+                </article>
+              );
+            })}
+          </div>
+        )}
+      </section>
     </div>
   );
 }

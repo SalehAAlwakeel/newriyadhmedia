@@ -3,17 +3,19 @@
 //
 // Turns a user's brand context (Brand Kit + Content Preferences + connections)
 // into real, on-brand posts (caption + body + hashtags + image[s]) using
-// OpenAI for text and OpenAI Images for visuals.
+// OpenAI for text and GPT Image 2 for visuals + Google Veo 3.1 (Gemini API) for short video.
 //
 // Falls back to deterministic placeholders when OPENAI_API_KEY is missing, so
 // the rest of the platform stays demoable.
 // ---------------------------------------------------------------------------
 
-import OpenAI from "openai";
 import { z } from "zod";
-import { generate, isLiveAi } from "./llm";
+import { generate } from "./llm";
 import { SAUDI_MARKETING_CONTEXT } from "./marketingContext";
-import { persistGeneratedImage } from "./mediaStore";
+import { generateFluxImages, imageSizeForPostType, isLiveImage } from "./image";
+import { enhancePrompt } from "./promptEnhancer";
+import { persistGeneratedImage, persistGeneratedVideo } from "./mediaStore";
+import { generateVideo, isLiveVideo } from "./video";
 import type { BrandKit, ContentPreferences, GeneratedPost, PostType, User } from "./db";
 
 export interface BrandContext {
@@ -171,21 +173,8 @@ function mockCopy(brand: BrandContext, type: PostType, topicHint?: string): Copy
 }
 
 // ---------------------------------------------------------------------------
-// 2) Image part — OpenAI Images (gpt-image-1)
+// 2) Image part — GPT Image 2 via OpenAI (default) or FLUX via fal.ai (IMAGE_PROVIDER=fal)
 // ---------------------------------------------------------------------------
-
-let imageClient: OpenAI | null = null;
-function imgClient(): OpenAI | null {
-  if (!process.env.OPENAI_API_KEY) return null;
-  if (!imageClient) imageClient = new OpenAI({ apiKey: process.env.OPENAI_API_KEY, timeout: 90_000, maxRetries: 0 });
-  return imageClient;
-}
-
-function imageSizeFor(type: PostType): "1024x1024" | "1024x1536" | "1536x1024" {
-  if (type === "Story" || type === "Short-form Video") return "1024x1536";
-  if (type === "Blog Post" || type === "Email") return "1536x1024";
-  return "1024x1024";
-}
 
 function brandStyleSuffix(b: BrandContext): string {
   const bits: string[] = [];
@@ -197,15 +186,12 @@ function brandStyleSuffix(b: BrandContext): string {
   return bits.length ? ` Style: ${bits.join("; ")}.` : "";
 }
 
-/** One generated frame: either provider base64/url, or a remote placeholder. */
+/** One generated frame: remote URL from fal, or a placeholder. */
 interface ImageItem {
-  b64?: string;
   url?: string;
 }
 
 function placeholderFrames(brand: BrandContext, type: PostType, count: number): ImageItem[] {
-  // picsum.photos is a live, deterministic placeholder service (the old
-  // source.unsplash.com/featured endpoint was retired and now fails).
   const base = encodeURIComponent(`${brand.businessName}-${type}`).replace(/%/g, "").slice(0, 40);
   return Array.from({ length: count }, (_, i) => ({
     url: `https://picsum.photos/seed/${base}-${i}/1024/1024`,
@@ -217,27 +203,35 @@ async function generateImage(
   type: PostType,
   brand: BrandContext,
   count = 1,
-): Promise<{ items: ImageItem[]; source: "openai" | "mock" }> {
-  const api = imgClient();
-  const fullPrompt = `${prompt}${brandStyleSuffix(brand)}`;
-  if (!api) {
+): Promise<{ items: ImageItem[]; source: "openai" | "flux" | "mock" }> {
+  const enhanced = await enhancePrompt({
+    rawPrompt: prompt,
+    kind: "image",
+    brandKit: brand.brandKit,
+    postType: type,
+  });
+  const fullPrompt = `${enhanced}${brandStyleSuffix(brand)}`;
+  if (!isLiveImage()) {
+    console.warn("[generate] OPENAI_API_KEY missing — using placeholder images (picsum). Add the key to .env.local for GPT Image 2.");
     return { items: placeholderFrames(brand, type, count), source: "mock" };
   }
   try {
-    const res = await api.images.generate({
-      model: process.env.OPENAI_IMAGE_MODEL || "gpt-image-1",
+    const result = await generateFluxImages({
       prompt: fullPrompt,
-      size: imageSizeFor(type),
-      n: count,
+      count,
+      imageSize: imageSizeForPostType(type),
     });
-    const items = (res.data ?? [])
-      .map((d): ImageItem | null => (d.b64_json ? { b64: d.b64_json } : d.url ? { url: d.url } : null))
-      .filter((x): x is ImageItem => Boolean(x));
-    if (items.length === 0) throw new Error("Image API returned no images");
-    return { items, source: "openai" };
+    if (!result?.urls.length) {
+      const reason = process.env.OPENAI_API_KEY
+        ? "Image API returned nothing — check OpenAI billing/limits in platform/.env.local"
+        : "OPENAI_API_KEY missing in platform/.env.local";
+      throw new Error(reason);
+    }
+    return { items: result.urls.map((url) => ({ url })), source: result.source };
   } catch (err) {
-    console.error("[generate] image generation failed, falling back:", err);
-    return { items: placeholderFrames(brand, type, count), source: "mock" };
+    const msg = err instanceof Error ? err.message : String(err);
+    console.error("[generate] image generation failed:", msg);
+    throw new Error(msg);
   }
 }
 
@@ -265,24 +259,93 @@ function frameCountFor(type: PostType, override?: number): number {
   return 1;
 }
 
+// Build a Veo prompt from the art-direction image prompt + caption hook.
+function videoPromptFor(imagePrompt: string, caption: string, brand: BrandContext): string {
+  const hook = caption.split("\n")[0]?.slice(0, 140) ?? "";
+  return [
+    imagePrompt,
+    hook ? `Theme: ${hook}` : "",
+    "Motion: slow cinematic camera push-in with subtle parallax; smooth, premium pacing.",
+    "Format: 8-second vertical 9:16 branded social video. No on-screen captions or dialogue.",
+    brandStyleSuffix(brand).replace(/^ Style:/, "Style:"),
+  ].filter(Boolean).join(" ");
+}
+
+// Persist a list of provider image items to disk, returning app URLs.
+async function persistImageItems(
+  userId: string,
+  postId: string,
+  items: ImageItem[],
+  source: "openai" | "flux" | "mock",
+  label: string,
+): Promise<string[]> {
+  const urls: string[] = [];
+  for (const item of items) {
+    if ((source === "flux" || source === "openai") && item.url) {
+      const localUrl = await persistGeneratedImage(userId, postId, item, label);
+      urls.push(localUrl ?? item.url);
+    } else {
+      urls.push(item.url ?? "");
+    }
+  }
+  return urls.filter(Boolean);
+}
+
+/**
+ * Produce the media URLs for a post.
+ * - Short-form Video with a live video provider -> [posterImageUrl, videoUrl].
+ *   (Poster is kept first so card thumbnails keep working; the video is tagged.)
+ * - Otherwise -> still image(s) / multi-frame slideshow.
+ */
+async function buildPostMedia(
+  userId: string,
+  postId: string,
+  type: PostType,
+  imagePrompt: string,
+  caption: string,
+  brand: BrandContext,
+  framesOverride?: number,
+): Promise<string[]> {
+  if (type === "Short-form Video" && isLiveVideo()) {
+    // 1) On-brand poster still (sent to Veo as inline base64 — no public URL needed).
+    const cover = await generateImage(imagePrompt, type, brand, 1);
+    const posterUrls = await persistImageItems(userId, postId, cover.items, cover.source, "video-poster");
+
+    // 2) Animate the poster with Google Veo 3.1 (Gemini API).
+    const vid = await generateVideo({
+      prompt: await enhancePrompt({
+        rawPrompt: videoPromptFor(imagePrompt, caption, brand),
+        kind: "video",
+        brandKit: brand.brandKit,
+        postType: type,
+      }),
+      imageUrl: posterUrls[0] ?? cover.items[0]?.url,
+      aspectRatio: "9:16",
+    });
+    let videoUrl = "";
+    if (vid) {
+      videoUrl =
+        (await persistGeneratedVideo(userId, postId, vid.url, "short-video", vid.bytes
+          ? { bytes: vid.bytes, mime: vid.mime }
+          : undefined)) ?? vid.url;
+    }
+
+    if (videoUrl) {
+      return [posterUrls[0] ?? "", videoUrl].filter(Boolean);
+    }
+    // Video provider failed — fall through to multi-frame slideshow preview.
+  }
+
+  const frames = frameCountFor(type, framesOverride);
+  const { items, source } = await generateImage(imagePrompt, type, brand, frames);
+  return persistImageItems(userId, postId, items, source, type);
+}
+
 export async function generateOnePost(opts: GeneratePostOptions): Promise<GeneratedPost> {
   const id = cryptoRandomId();
   const { copy } = await generateCopy(opts.brand, opts.type, opts.topicHint, opts.campaignName);
 
-  const frames = frameCountFor(opts.type, opts.frames);
-  const { items, source } = await generateImage(copy.imagePrompt, opts.type, opts.brand, frames);
-
-  // Persist real (provider) images to disk and reference them by app URL so the
-  // database never carries base64. Placeholder URLs are kept as-is (external).
-  const imageUrls: string[] = [];
-  for (const item of items) {
-    if (source === "openai") {
-      const localUrl = await persistGeneratedImage(opts.userId, id, item, opts.type);
-      imageUrls.push(localUrl ?? item.url ?? "");
-    } else {
-      imageUrls.push(item.url ?? "");
-    }
-  }
+  const imageUrls = await buildPostMedia(opts.userId, id, opts.type, copy.imagePrompt, copy.caption, opts.brand, opts.frames);
 
   return {
     id,
@@ -298,6 +361,40 @@ export async function generateOnePost(opts: GeneratePostOptions): Promise<Genera
     status: "ready",
     createdAt: new Date().toISOString(),
   };
+}
+
+// Regenerate parts of an existing post (text and/or images), reusing the same
+// engine. Returns a patch to merge into the stored post.
+export async function regeneratePost(
+  existing: GeneratedPost,
+  brand: BrandContext,
+  parts: { text?: boolean; images?: boolean },
+): Promise<Partial<GeneratedPost>> {
+  const patch: Partial<GeneratedPost> = {};
+  let imagePrompt: string | undefined;
+
+  if (parts.text) {
+    const { copy } = await generateCopy(brand, existing.type, existing.topic, existing.campaignName);
+    patch.topic = copy.topic;
+    patch.caption = copy.caption;
+    patch.body = copy.body;
+    patch.hashtags = copy.hashtags;
+    imagePrompt = copy.imagePrompt;
+  }
+
+  if (parts.images) {
+    const prompt = imagePrompt ?? `${existing.topic}. ${existing.caption}`.slice(0, 600);
+    patch.imageUrls = await buildPostMedia(
+      existing.userId,
+      existing.id,
+      existing.type,
+      prompt,
+      patch.caption ?? existing.caption,
+      brand,
+    );
+  }
+
+  return patch;
 }
 
 function cryptoRandomId(): string {
@@ -327,8 +424,4 @@ export function plannedTypesFromPrefs(prefs: ContentPreferences | null | undefin
     for (let i = 0; i < n; i++) result.push(t);
   });
   return result;
-}
-
-export function liveAi(): boolean {
-  return isLiveAi();
 }

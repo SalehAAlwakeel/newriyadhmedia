@@ -50,7 +50,13 @@ export const PLATFORMS: PlatformDef[] = [
     oauth: {
       authUrl: "https://www.facebook.com/v21.0/dialog/oauth",
       tokenUrl: "https://graph.facebook.com/v21.0/oauth/access_token",
-      scopes: ["instagram_basic", "instagram_content_publish", "pages_show_list", "instagram_manage_insights"],
+      scopes: [
+        "instagram_basic",
+        "instagram_content_publish",
+        "pages_show_list",
+        "pages_read_engagement",
+        "instagram_manage_insights",
+      ],
       clientIdEnv: "META_CLIENT_ID",
       clientSecretEnv: "META_CLIENT_SECRET",
     },
@@ -187,6 +193,13 @@ export const PLATFORMS: PlatformDef[] = [
 
 export function getPlatform(id: string): PlatformDef | undefined {
   return PLATFORMS.find((p) => p.id === id);
+}
+
+/** Platforms with a live connect + publish flow. Others show as "Coming soon". */
+export const LIVE_PLATFORMS = new Set<string>(["instagram"]);
+
+export function isPlatformLive(id: string): boolean {
+  return LIVE_PLATFORMS.has(id);
 }
 
 /** True when the provider app credentials exist, so real OAuth can run. */

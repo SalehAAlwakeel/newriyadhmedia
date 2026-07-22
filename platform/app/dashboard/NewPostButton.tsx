@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import { Sparkles } from "lucide-react";
 import { useRouter } from "next/navigation";
 
 const TYPES = ["Still Image", "Carousel", "Short-form Video", "Story", "Blog Post", "Email"] as const;
@@ -104,7 +105,7 @@ export default function NewPostButton({ label = "+ Create New", className = "btn
               {drafts.map((d) => (
                 <div key={d.id} className="np-draft">
                   <div className="np-draft__thumb">
-                    <span>✦ Will generate on schedule</span>
+                    <span><Sparkles size={13} /> Will generate on schedule</span>
                   </div>
                   <div className="np-draft__body">
                     <div className="np-draft__topicrow">

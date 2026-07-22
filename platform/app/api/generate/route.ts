@@ -1,8 +1,9 @@
 import { NextResponse } from "next/server";
 import { getCurrentUser } from "@/lib/auth";
-import { createPost } from "@/lib/db";
+import { createPost, updateUser } from "@/lib/db";
 import type { PostType } from "@/lib/db";
 import { brandFromUser, generateOnePost, plannedTypesFromPrefs } from "@/lib/generate";
+import { costForType, DEFAULT_CREDITS, totalCost } from "@/lib/credits";
 
 export const dynamic = "force-dynamic";
 
@@ -21,28 +22,48 @@ export async function POST(req: Request) {
 
   const body = (await req.json().catch(() => ({}))) as GenerateBody;
   const brand = brandFromUser(user);
+  const credits = user.credits ?? DEFAULT_CREDITS;
 
-  // Single-post path
+  // Single-post path — charges credits, stages the post for review (it only
+  // reaches the calendar once approved & scheduled).
   if (body.type) {
+    const cost = costForType(body.type);
+    if (credits < cost) {
+      return NextResponse.json(
+        { error: `Not enough credits — this ${body.type} needs ${cost}, you have ${credits}.`, creditsRemaining: credits },
+        { status: 402 },
+      );
+    }
+
     const post = await generateOnePost({
       userId: user.id,
       brand,
       type: body.type,
       topicHint: body.topic,
       campaignName: body.campaignName ?? "Custom",
-      scheduledFor: body.scheduledFor ?? new Date(Date.now() + 24 * 3600_000).toISOString(),
+      scheduledFor: body.scheduledFor ?? new Date().toISOString(),
     });
     await createPost(post);
-    return NextResponse.json({ posts: [post] });
+
+    const creditsRemaining = credits - cost;
+    await updateUser(user.id, { credits: creditsRemaining });
+
+    return NextResponse.json({ posts: [post], creditsRemaining });
   }
 
-  // Weekly batch path
+  // Weekly batch path — also charges credits
   const types = plannedTypesFromPrefs(user.contentPrefs);
+  const batchCost = totalCost(types);
+  if (credits < batchCost) {
+    return NextResponse.json(
+      { error: `Not enough credits — this week needs ${batchCost}, you have ${credits}.`, creditsRemaining: credits },
+      { status: 402 },
+    );
+  }
+
   const weekStart = body.weekStart ? new Date(body.weekStart) : nextMonday();
   const campaignName = body.campaignName ?? `${user.company || user.name}'s Week of ${weekStart.toLocaleDateString("en-US", { month: "short", day: "numeric" })}`;
 
-  // Generate sequentially so we respect per-key rate limits, but kick all off
-  // server-side before responding so the client just shows the result list.
   const out = [];
   for (let i = 0; i < types.length; i++) {
     const type = types[i];
@@ -63,12 +84,16 @@ export async function POST(req: Request) {
       console.error("[/api/generate] one post failed:", err);
     }
   }
-  return NextResponse.json({ posts: out, campaignName });
+
+  const creditsRemaining = credits - batchCost;
+  await updateUser(user.id, { credits: creditsRemaining });
+
+  return NextResponse.json({ posts: out, campaignName, creditsRemaining });
 }
 
 function nextMonday(): Date {
   const d = new Date();
-  const day = d.getDay(); // 0..6 (Sun..Sat)
+  const day = d.getDay();
   const diff = ((8 - day) % 7) || 7;
   d.setDate(d.getDate() + diff);
   d.setHours(9, 0, 0, 0);

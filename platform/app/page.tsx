@@ -1,16 +1,17 @@
 import Link from "next/link";
+import { marketingLink } from "@/lib/site";
 
 export default function Home() {
   return (
     <div className="shell">
       <header className="topbar">
-        <a href="http://localhost:5173/index.html" className="topbar__brand">
+        <a href={marketingLink("index.html")} className="topbar__brand">
           <b>New Riyadh Media</b>
         </a>
         <nav className="topbar__nav">
-          <a href="http://localhost:5173/index.html#about" className="topbar__link">About</a>
-          <a href="http://localhost:5173/index.html#services" className="topbar__link">Services</a>
-          <a href="http://localhost:5173/automated-marketing.html" className="topbar__link">Automated Marketing</a>
+          <a href={marketingLink("index.html#about")} className="topbar__link">About</a>
+          <a href={marketingLink("index.html#services")} className="topbar__link">Services</a>
+          <a href={marketingLink("automated-marketing.html")} className="topbar__link">Automated Marketing</a>
           <Link href="/try" className="topbar__link">AI Marketing Test</Link>
           <Link href="/diagnostics" className="topbar__link">Website Diagnostics</Link>
           <Link href="/login" className="topbar__link">Sign in</Link>
