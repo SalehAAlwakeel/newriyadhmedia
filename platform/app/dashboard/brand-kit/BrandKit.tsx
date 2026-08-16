@@ -321,6 +321,7 @@ function LogoStyleCard({
     try {
       const fd = new FormData();
       fd.append("file", file);
+      fd.append("label", "logo");
       const res = await fetch("/api/media", { method: "POST", body: fd });
       const data = await res.json().catch(() => ({}));
       if (res.ok && data.asset?.url) onLogoUrl(data.asset.url);
@@ -692,6 +693,7 @@ function MediaLibrary() {
       for (const f of Array.from(files)) {
         const fd = new FormData();
         fd.append("file", f);
+        if (f.type.startsWith("image/")) fd.append("label", "product");
         const res = await fetch("/api/media", { method: "POST", body: fd });
         const data = await res.json().catch(() => ({}));
         if (res.ok && data.asset) setMedia((m) => [data.asset, ...m]);
@@ -712,7 +714,7 @@ function MediaLibrary() {
       <div className="bk__panelhead">
         <div>
           <h2 className="bk__h">Media Library <span>{media.filter((m) => m.kind === "image").length} images, {media.filter((m) => m.kind === "video").length} videos</span></h2>
-          <p className="bk__sub">Upload pictures and videos. The AI uses these when generating posts, blogs and emails.</p>
+          <p className="bk__sub">Upload product photos and videos. Short-form video generation locks onto these exact assets (logo + products) so Veo does not invent a lookalike.</p>
         </div>
         <label className="btn btn--sm">
           {busy ? "Uploading…" : "+ Add New Media"}

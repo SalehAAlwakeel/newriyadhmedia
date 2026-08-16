@@ -9,6 +9,8 @@ export interface EnhanceInput {
   kind: EnhanceKind;
   brandKit?: BrandKit | null;
   postType?: string;
+  /** When true, Veo was given real logo/product reference images — never invent replacements. */
+  lockExactAssets?: boolean;
 }
 
 const SYSTEM = `You are a world-class creative director and prompt engineer for production AI image models (GPT Image 2, FLUX, Veo).
@@ -22,7 +24,8 @@ Rules:
 - Weave brand colors naturally into palette, props, or lighting — never as flat color swatches.
 - If the input is Arabic or mixed language, understand intent fully and output the prompt in English.
 - Avoid vague adjectives ("beautiful", "stunning") — replace with concrete visual direction.
-- Keep under 450 words.`;
+- Keep under 450 words.
+- When told that real logo/product reference images are attached: you MUST instruct the model to keep that exact product and logo — same packaging, label, mark geometry, and colors. Never invent a substitute brand or product.`;
 
 function brandHints(kit?: BrandKit | null): string {
   if (!kit) return "";
@@ -57,6 +60,9 @@ export async function enhancePrompt(input: EnhanceInput): Promise<string> {
         `Media type: ${input.kind === "video" ? "short-form branded video" : "social still image"}.`,
         input.postType ? `Post format: ${input.postType}.` : "",
         brandHints(input.brandKit),
+        input.lockExactAssets
+          ? "Real logo/product REFERENCE IMAGES are attached to this generation. Lock identity to those assets exactly — do not redesign the logo or invent a different product."
+          : "",
         `\nClient's idea:\n${raw}`,
       ]
         .filter(Boolean)

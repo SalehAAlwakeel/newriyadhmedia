@@ -16,7 +16,7 @@ import { generateFluxImages, imageSizeForPostType, isLiveImage } from "./image";
 import { enhancePrompt } from "./promptEnhancer";
 import { persistGeneratedImage, persistGeneratedVideo } from "./mediaStore";
 import { generateVideo, isLiveVideo } from "./video";
-import type { BrandKit, ContentPreferences, GeneratedPost, PostType, User } from "./db";
+import { listMedia, type BrandKit, type ContentPreferences, type GeneratedPost, type PostType, type User } from "./db";
 
 export interface BrandContext {
   businessName: string;
@@ -260,15 +260,65 @@ function frameCountFor(type: PostType, override?: number): number {
 }
 
 // Build a Veo prompt from the art-direction image prompt + caption hook.
-function videoPromptFor(imagePrompt: string, caption: string, brand: BrandContext): string {
+function videoPromptFor(
+  imagePrompt: string,
+  caption: string,
+  brand: BrandContext,
+  hasExactAssets: boolean,
+): string {
   const hook = caption.split("\n")[0]?.slice(0, 140) ?? "";
+  const identityLock = hasExactAssets
+    ? [
+        "CRITICAL IDENTITY LOCK: The supplied reference image(s) are the REAL brand logo and/or product.",
+        "Reproduce that exact logo mark, packaging, bottle/box shape, label typography, and colors — pixel-faithful.",
+        "Do NOT invent a different logo, swap the product, rebrand the packaging, or invent lookalike packaging.",
+        "Keep the product/logo recognizable as the same physical item throughout the entire clip.",
+      ].join(" ")
+    : "If a brand logo is described, keep letterforms and mark geometry consistent across the clip.";
   return [
     imagePrompt,
     hook ? `Theme: ${hook}` : "",
-    "Motion: slow cinematic camera push-in with subtle parallax; smooth, premium pacing.",
-    "Format: 8-second vertical 9:16 branded social video. No on-screen captions or dialogue.",
+    identityLock,
+    "Motion: slow cinematic camera push-in with subtle parallax; smooth, premium pacing; product stays hero of frame.",
+    "Format: 8-second vertical 9:16 branded social video. No on-screen captions, watermarks, or dialogue.",
     brandStyleSuffix(brand).replace(/^ Style:/, "Style:"),
   ].filter(Boolean).join(" ");
+}
+
+/**
+ * Collect up to 3 brand assets (logo first, then uploaded product photos) so Veo
+ * can lock identity via referenceImages. Generated mock/picsum URLs are skipped.
+ */
+async function resolveBrandReferenceImages(
+  userId: string,
+  brand: BrandContext,
+): Promise<string[]> {
+  const urls: string[] = [];
+  const push = (url?: string | null) => {
+    if (!url) return;
+    if (url.includes("picsum.photos")) return;
+    if (urls.includes(url)) return;
+    urls.push(url);
+  };
+
+  push(brand.brandKit?.logoUrl);
+
+  try {
+    const media = await listMedia(userId);
+    // Prefer user uploads / source materials over AI-generated frames.
+    const uploads = media.filter(
+      (m) => m.kind === "image" && (m.source === "upload" || m.label === "logo" || m.label === "product"),
+    );
+    const others = media.filter((m) => m.kind === "image" && !uploads.includes(m));
+    for (const asset of [...uploads, ...others]) {
+      push(asset.url);
+      if (urls.length >= 3) break;
+    }
+  } catch (err) {
+    console.warn("[generate] listMedia for video refs failed:", err);
+  }
+
+  return urls.slice(0, 3);
 }
 
 // Persist a list of provider image items to disk, returning app URLs.
@@ -307,19 +357,36 @@ async function buildPostMedia(
   framesOverride?: number,
 ): Promise<string[]> {
   if (type === "Short-form Video" && isLiveVideo()) {
-    // 1) On-brand poster still (sent to Veo as inline base64 — no public URL needed).
-    const cover = await generateImage(imagePrompt, type, brand, 1);
-    const posterUrls = await persistImageItems(userId, postId, cover.items, cover.source, "video-poster");
+    // Brand logo + product photos — Veo "asset" references so the clip keeps
+    // the exact same mark/product instead of inventing a lookalike.
+    const brandRefs = await resolveBrandReferenceImages(userId, brand);
+    const strict = brand.contentPrefs?.mode === "strict" || brand.contentPrefs?.mode === "brand-first";
 
-    // 2) Animate the poster with Google Veo 3.1 (Gemini API).
+    let posterUrl = brandRefs[0] ?? "";
+    // In strict/brand-first mode with a real logo/product, skip inventing a new
+    // poster — animate the real asset. Otherwise generate a poster AND still
+    // pass brand refs so Veo locks identity.
+    if (!posterUrl || !strict) {
+      try {
+        const cover = await generateImage(imagePrompt, type, brand, 1);
+        const posterUrls = await persistImageItems(userId, postId, cover.items, cover.source, "video-poster");
+        if (posterUrls[0]) posterUrl = posterUrls[0];
+      } catch (err) {
+        console.warn("[generate] video poster generation failed; using brand asset only:", err);
+      }
+    }
+
     const vid = await generateVideo({
       prompt: await enhancePrompt({
-        rawPrompt: videoPromptFor(imagePrompt, caption, brand),
+        rawPrompt: videoPromptFor(imagePrompt, caption, brand, brandRefs.length > 0),
         kind: "video",
         brandKit: brand.brandKit,
         postType: type,
+        lockExactAssets: brandRefs.length > 0,
       }),
-      imageUrl: posterUrls[0] ?? cover.items[0]?.url,
+      // First frame: prefer real product/logo when present; else generated poster.
+      imageUrl: brandRefs[0] ?? posterUrl,
+      referenceImageUrls: brandRefs,
       aspectRatio: "9:16",
     });
     let videoUrl = "";
@@ -331,7 +398,7 @@ async function buildPostMedia(
     }
 
     if (videoUrl) {
-      return [posterUrls[0] ?? "", videoUrl].filter(Boolean);
+      return [posterUrl || brandRefs[0] || "", videoUrl].filter(Boolean);
     }
     // Video provider failed — fall through to multi-frame slideshow preview.
   }

@@ -59,6 +59,7 @@ export async function POST(req: Request) {
     sizeBytes: file.size,
     kind: kindOf(file.type),
     source: "upload",
+    label: typeof form?.get("label") === "string" ? String(form.get("label")).slice(0, 40) : undefined,
     url: `/api/media/file/${id}`,
     uploadedAt: new Date().toISOString(),
   };
